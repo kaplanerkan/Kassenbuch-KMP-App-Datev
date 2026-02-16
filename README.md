@@ -5,28 +5,26 @@
 
 ---
 
-## Was ist das? / Bu nedir?
+## Was ist das?
 
-**DE:** Eine plattformübergreifende App zum Führen eines digitalen Kassenbuchs nach deutschen Buchhaltungsvorschriften (GoBD). Die gesamte Geschäftslogik und UI ist in Kotlin Multiplatform (KMP) mit Compose Multiplatform geschrieben und läuft auf Android, Windows, macOS, Linux und iOS.
-
-**TR:** Almanya'daki GoBD kurallarına uygun dijital kasa defteri uygulaması. Kotlin Multiplatform (KMP) ve Compose Multiplatform ile yazılmış olup Android, Windows, macOS, Linux ve iOS üzerinde çalışır. Özellikle dönerci, pizzacı gibi küçük gastronomi işletmeleri için geliştirilmiştir.
+Eine plattformübergreifende App zum Führen eines digitalen Kassenbuchs nach deutschen Buchhaltungsvorschriften (GoBD). Die gesamte Geschäftslogik und UI ist in Kotlin Multiplatform (KMP) mit Compose Multiplatform geschrieben und läuft auf Android, Windows, macOS, Linux und iOS.
 
 ---
 
-## Funktionen / Özellikler
+## Funktionen
 
-| Feature | Beschreibung | Türkçe |
-|---------|-------------|--------|
-| **Dashboard** | Kassenbestand, Tageseinnahmen/-ausgaben, Monatsübersicht | Kasa bakiyesi, günlük/aylık gelir-gider özeti |
-| **Buchungen** | Einnahmen & Ausgaben mit Datum, Uhrzeit, Betrag, Buchungsart | Tarih, saat, tutar ve kayıt türü ile gelir-gider kaydı |
-| **Belegfotos** | Belege direkt fotografieren und zur Buchung speichern | Fişleri kamerayla çekip kayda ekleme |
-| **Münzzähler** | Schein- und Münzzähler für den Kassensturz | Kasa sayımı için madeni para ve banknot sayıcı |
-| **Tagesabschluss** | Vortrag, Einnahmen, Ausgaben, Endbestand, Kassendifferenz | Gün sonu kapanışı ve kasa farkı hesaplama |
-| **DATEV-Export** | Buchungsstapel im DATEV-Format (EXTF v12.0) | Muhasebeciye gönderilebilir DATEV CSV |
-| **CSV-Export** | Kassenbuch als CSV für Excel / Google Sheets | Excel/Sheets için basit tablo |
-| **Einstellungen** | Betriebsdaten, DATEV Berater-/Mandanten-Nr., Wechselgeld | İşletme bilgileri, DATEV numaraları, para üstü ayarı |
-| **Dark/Light Theme** | Material 3 mit automatischem Dark Mode | Otomatik karanlık mod desteği |
-| **Responsive Layout** | NavigationBar (Telefon) / NavigationRail (Tablet/Desktop) | Cihaz boyutuna göre uyarlanabilir arayüz |
+| Feature | Beschreibung |
+|---------|-------------|
+| **Dashboard** | Kassenbestand, Tageseinnahmen/-ausgaben, Monatsübersicht auf einen Blick |
+| **Buchungen** | Einnahmen & Ausgaben mit Datum, Uhrzeit, Betrag, Buchungsart und Gegenkonto |
+| **Belegfotos** | Belege direkt fotografieren und zur Buchung speichern |
+| **Münzzähler** | Schein- und Münzzähler für den Kassensturz |
+| **Tagesabschluss** | Vortrag, Einnahmen, Ausgaben, Endbestand und Kassendifferenz |
+| **DATEV-Export** | Buchungsstapel im DATEV-Format (EXTF v12.0) für den Steuerberater |
+| **CSV-Export** | Kassenbuch als CSV für Excel / Google Sheets |
+| **Einstellungen** | Betriebsdaten, DATEV Berater-/Mandanten-Nr., Wechselgeld-Standard |
+| **Dark/Light Theme** | Material 3 mit automatischem Dark Mode |
+| **Responsive Layout** | NavigationBar (Telefon) / NavigationRail (Tablet/Desktop) |
 
 ---
 
@@ -127,9 +125,9 @@ Im Tab **Export** können die Buchungen für den Steuerberater exportiert werden
 
 ---
 
-## Technische Architektur / Teknik Yapı
+## Technische Architektur
 
-### Plattformen / Platformlar
+### Plattformen
 
 | Plattform | Status |
 |-----------|--------|
@@ -200,6 +198,16 @@ composeApp/src/
 | 8100 | Erlöse 7 % | Speisenverkauf |
 | 8300 | Erlöse 19 % | Getränkeverkauf |
 
+### BU-Schlüssel (DATEV)
+
+| Code | Bedeutung |
+|------|----------|
+| 2 | 7 % Umsatzsteuer |
+| 3 | 19 % Umsatzsteuer |
+| 8 | 7 % Vorsteuer |
+| 9 | 19 % Vorsteuer |
+| 40 | Ohne Umsatzsteuer |
+
 ---
 
 ## Build & Run
@@ -227,17 +235,15 @@ composeApp/src/
 
 ---
 
-## Hinweise / Notlar
+## Hinweise
 
 - **Dies ist kein Ersatz für eine Steuerberatung.** Alle Einstellungen und Exporte mit dem Steuerberater abstimmen.
-- **Bu bir vergi danışmanlığı değildir.** Tüm ayarları ve dışa aktarımları muhasebecine danışarak kullanın.
-- DATEV-Export'taki Berater-Nr. und Mandanten-Nr. vom Steuerberater erfragen.
+- Berater-Nr. und Mandanten-Nr. für den DATEV-Export vom Steuerberater erfragen.
 - Z-Berichte und alle Belege 10 Jahre aufbewahren (§ 147 AO).
 - Die App funktioniert vollständig offline — kein Internet erforderlich.
 
 ---
 
-## Lizenz / Lisans
+## Lizenz
 
-Dieses Projekt dient als Beispiel und ist frei verwendbar.
-Bu proje örnek olarak serbestçe kullanılabilir.
+Dieses Projekt steht unter der [MIT-Lizenz](LICENSE).
