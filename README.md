@@ -11,6 +11,14 @@ Eine plattformübergreifende App zum Führen eines digitalen Kassenbuchs nach de
 
 ---
 
+## Screenshots
+
+| Desktop (Windows) | Android |
+|:--:|:--:|
+| ![Desktop Dashboard](screenshots/AnyDesk_LUu2tIrOCU.png) | ![Android Dashboard](screenshots/AnyDesk_Vgp4XwIt7v.png) |
+
+---
+
 ## Funktionen
 
 | Feature | Beschreibung |
