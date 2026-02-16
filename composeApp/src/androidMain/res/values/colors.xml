@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2D6A4F</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#B7E4C7</color>
+    <color name="secondary">#40916C</color>
+    <color name="einnahme">#34D399</color>
+    <color name="ausgabe">#F87171</color>
+    <color name="saldo">#4F8CFF</color>
+    <color name="wechselgeld">#FBBF24</color>
+    <color name="gutschein">#A855F7</color>
+</resources>

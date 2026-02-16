@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kassenbuch</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Übersicht</string>
+    <string name="nav_bookings">Buchungen</string>
+    <string name="nav_daily">Tagesabschluss</string>
+    <string name="nav_export">Export</string>
+    <string name="nav_info">Info</string>
+    <string name="nav_settings">Einstellungen</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Kassenübersicht</string>
+    <string name="dashboard_kassenbestand">Kassenbestand</string>
+    <string name="dashboard_today_revenue">Tageseinnahmen</string>
+    <string name="dashboard_today_expenses">Tagesausgaben</string>
+    <string name="dashboard_month_revenue">Monatseinnahmen</string>
+    <string name="dashboard_month_expenses">Monatsausgaben</string>
+    <string name="dashboard_quick_actions">Schnellaktionen</string>
+    <string name="dashboard_recent">Letzte Buchungen</string>
+    <string name="dashboard_no_bookings">Noch keine Buchungen vorhanden</string>
+    <string name="dashboard_start_hint">Tippe auf "Neue Buchung" um zu starten</string>
+
+    <!-- Buchungen -->
+    <string name="booking_new">Neue Buchung</string>
+    <string name="booking_edit">Buchung bearbeiten</string>
+    <string name="booking_date">Datum</string>
+    <string name="booking_time">Uhrzeit</string>
+    <string name="booking_amount">Betrag (€)</string>
+    <string name="booking_type">Buchungsart</string>
+    <string name="booking_description">Buchungstext</string>
+    <string name="booking_gegenkonto">Gegenkonto</string>
+    <string name="booking_beleg">Beleg-Nr.</string>
+    <string name="booking_tax_rate">Steuersatz</string>
+    <string name="booking_bu_key">BU-Schlüssel</string>
+    <string name="booking_photo">Beleg-Foto</string>
+    <string name="booking_photo_exists">Foto vorhanden</string>
+    <string name="booking_photo_none">Kein Foto</string>
+    <string name="booking_take_photo">Foto</string>
+    <string name="booking_note">Notiz (optional)</string>
+    <string name="booking_save">Speichern</string>
+    <string name="booking_delete">Löschen</string>
+    <string name="booking_no_bookings_day">Keine Buchungen für diesen Tag</string>
+    <string name="booking_error_amount">Bitte gültigen Betrag eingeben</string>
+    <string name="booking_error_text">Bitte Buchungstext eingeben</string>
+
+    <!-- Buchungsarten -->
+    <string name="type_einnahme">Einnahme</string>
+    <string name="type_ausgabe">Ausgabe</string>
+    <string name="type_tagesumsatz_7">Tagesumsatz 7% (Z-Bericht)</string>
+    <string name="type_tagesumsatz_19">Tagesumsatz 19% (Z-Bericht)</string>
+    <string name="type_gutschein_verkauf">Gutschein-Verkauf (0%)</string>
+    <string name="type_wechselgeld_ein">Wechselgeld Einlage</string>
+    <string name="type_privateinlage">Privateinlage</string>
+    <string name="type_sonstige_einnahme">Sonstige Einnahme</string>
+    <string name="type_wareneinkauf_7">Wareneinkauf 7%</string>
+    <string name="type_wareneinkauf_19">Wareneinkauf 19%</string>
+    <string name="type_wechselgeld_aus">Wechselgeld Entnahme</string>
+    <string name="type_privatentnahme">Privatentnahme</string>
+    <string name="type_bankeinzahlung">Bankeinzahlung</string>
+    <string name="type_buerokosten">Bürokosten</string>
+    <string name="type_sonstige_ausgabe">Sonstige Ausgabe</string>
+
+    <!-- Tagesabschluss -->
+    <string name="daily_title">Tagesabschluss</string>
+    <string name="daily_vortrag">Vortrag</string>
+    <string name="daily_einnahmen">+ Einnahmen</string>
+    <string name="daily_ausgaben">− Ausgaben</string>
+    <string name="daily_endbestand">= Endbestand</string>
+    <string name="daily_kassensturz">Kassensturz</string>
+    <string name="daily_counted">Gezählter Bestand (€)</string>
+    <string name="daily_difference">Differenz</string>
+    <string name="daily_close">Tag abschließen</string>
+    <string name="daily_already_closed">Tag bereits abgeschlossen</string>
+
+    <!-- Export -->
+    <string name="export_title">Daten exportieren</string>
+    <string name="export_period">Zeitraum</string>
+    <string name="export_from">Von</string>
+    <string name="export_to">Bis</string>
+    <string name="export_datev_title">DATEV Buchungsstapel</string>
+    <string name="export_datev_desc">Standard CSV für Ihren Steuerberater. Kompatibel mit DATEV Unternehmen Online, DATEV Kanzlei-Rechnungswesen und anderen DATEV-Produkten.</string>
+    <string name="export_datev_button">DATEV CSV exportieren</string>
+    <string name="export_csv_title">Einfaches Kassenbuch CSV</string>
+    <string name="export_csv_desc">Übersichtliche Tabelle mit allen Buchungen, Einnahmen, Ausgaben und Saldo. Für Excel oder Google Sheets.</string>
+    <string name="export_csv_button">Kassenbuch CSV exportieren</string>
+    <string name="export_share">Teilen</string>
+    <string name="export_datev_info_title">DATEV Format-Info</string>
+    <string name="export_datev_info_bu">BU-Schlüssel: 2 = 7% USt · 3 = 19% USt · 8 = 7% VSt · 9 = 19% VSt · 40 = steuerfrei</string>
+    <string name="export_datev_info_hint">Berater-Nr und Mandanten-Nr in den Einstellungen anpassen!</string>
+
+    <!-- Info -->
+    <string name="info_title">Kassenbuch Anleitung</string>
+
+    <!-- Einstellungen -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_business">Betriebsdaten</string>
+    <string name="settings_business_name">Betriebsname</string>
+    <string name="settings_address">Adresse</string>
+    <string name="settings_tax_number">Steuernummer</string>
+    <string name="settings_datev">DATEV Einstellungen</string>
+    <string name="settings_berater_nr">Berater-Nr.</string>
+    <string name="settings_mandant_nr">Mandanten-Nr.</string>
+    <string name="settings_sachkonto_length">Sachkontenlänge</string>
+    <string name="settings_kasse">Kasse</string>
+    <string name="settings_wechselgeld">Standard-Wechselgeld (€)</string>
+    <string name="settings_design">Darstellung</string>
+    <string name="settings_theme">Design</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Hell</string>
+    <string name="settings_theme_dark">Dunkel</string>
+    <string name="settings_save">Speichern</string>
+    <string name="settings_saved">Einstellungen gespeichert</string>
+    <string name="settings_version">Version 2.0.0 · Kassenbuch für Gastronomie</string>
+
+    <!-- Konten (SKR03) -->
+    <string name="konto_1000">1000 — Kasse</string>
+    <string name="konto_1200">1200 — Bank</string>
+    <string name="konto_1360">1360 — Geldtransit</string>
+    <string name="konto_1590">1590 — Durchl. Posten</string>
+    <string name="konto_1800">1800 — Privatentnahme</string>
+    <string name="konto_1890">1890 — Privateinlage</string>
+    <string name="konto_3300">3300 — Wareneingang 7%</string>
+    <string name="konto_3400">3400 — Wareneingang 19%</string>
+    <string name="konto_4930">4930 — Bürobedarf</string>
+    <string name="konto_4980">4980 — Sonstige Kosten</string>
+    <string name="konto_8100">8100 — Erlöse 7%</string>
+    <string name="konto_8300">8300 — Erlöse 19%</string>
+
+    <!-- Münzzähler -->
+    <string name="coin_counter_title">Münzzähler</string>
+    <string name="coin_total">Gesamt</string>
+    <string name="coin_confirm">Übernehmen</string>
+
+    <!-- Allgemein -->
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="back">Zurück</string>
+    <string name="error_prefix">Fehler</string>
+    <string name="select_date">Datum wählen</string>
+    <string name="select_time">Uhrzeit wählen</string>
+    <string name="all">Alle</string>
+    <string name="bu_prefix">BU</string>
+
+    <!-- Steuersätze -->
+    <string name="tax_0">0% (steuerfrei)</string>
+    <string name="tax_7">7% USt</string>
+    <string name="tax_19">19% USt</string>
+</resources>

@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kassenbuch Anleitung — Döner Imbiss</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232734;
+    --border: #2e3345;
+    --text: #e4e7f0;
+    --text-dim: #8b90a5;
+    --accent: #4f8cff;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --purple: #a855f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding: 2rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* Navigation */
+  nav {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 1rem;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  nav .nav-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-right: 1.25rem;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--green); }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 0.25rem 0; }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  header h1 span { color: var(--accent); }
+  header .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.25rem; }
+
+  /* Sections */
+  .chapter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    scroll-margin-top: 5rem;
+  }
+  .chapter-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  .chapter h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .chapter h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--yellow);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .chapter p {
+    font-size: 0.92rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  /* Info boxes */
+  .info-box {
+    background: var(--surface2);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .info-box.warning {
+    border-left-color: var(--red);
+    background: rgba(248,113,113,0.07);
+  }
+  .info-box.success {
+    border-left-color: var(--green);
+    background: rgba(52,211,153,0.07);
+  }
+  .info-box.tip {
+    border-left-color: var(--yellow);
+    background: rgba(251,191,36,0.07);
+  }
+  .info-box .box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+  .info-box.warning .box-title { color: var(--red); }
+  .info-box.success .box-title { color: var(--green); }
+  .info-box.tip .box-title { color: var(--yellow); }
+
+  /* Buchung examples */
+  .buchung {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .buchung .soll { color: var(--green); }
+  .buchung .haben { color: var(--red); }
+  .buchung .konto { color: var(--orange); font-weight: 700; }
+  .buchung .arrow { color: var(--text-dim); }
+  .buchung .betrag { color: var(--accent); font-weight: 700; }
+  .buchung .desc { color: var(--text-dim); font-size: 0.78rem; flex-basis: 100%; margin-top: 0.25rem; }
+
+  /* Flow diagrams */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    font-size: 0.85rem;
+    min-width: 120px;
+  }
+  .flow-step .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+  .flow-arrow {
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+  .compare-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface2);
+  }
+  .compare-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare-table tr:hover { background: var(--surface2); }
+  .yes { color: var(--green); font-weight: 600; }
+  .no { color: var(--red); font-weight: 600; }
+  .konto-tag {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(251,191,36,0.12);
+    color: var(--yellow);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ust-tag {
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .ust7 { background: rgba(52,211,153,0.12); color: var(--green); }
+  .ust19 { background: rgba(251,146,60,0.12); color: var(--orange); }
+  .ust0 { background: rgba(168,85,247,0.12); color: var(--purple); }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 2rem;
+    border-left: 3px solid var(--accent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem;
+    top: 0.35rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+  }
+  .timeline-item .time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--yellow);
+    font-weight: 600;
+  }
+  .timeline-item .action {
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+  .timeline-item .detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 700px) {
+    body { padding: 1rem; }
+    .chapter { padding: 1.25rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    nav { position: static; }
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .chapter, nav, header { background: #fff; border-color: #ccc; }
+    .info-box { background: #f8f8f8; }
+    .buchung { background: #f5f5f5; }
+    nav { position: static; }
+    :root { --accent: #2563eb; --text-dim: #666; --border: #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>KASSEN<span>BUCH</span> ANLEITUNG</h1>
+  <div class="subtitle">Döner Imbiss için Detaylı Kılavuz — Türkçe & Deutsch</div>
+</header>
+
+<nav>
+  <div class="nav-title">İçindekiler / Inhaltsverzeichnis</div>
+  <div class="nav-links">
+    <a href="#kap1">1. Kassenbuch Nedir?</a>
+    <a href="#kap2">2. Yasal Zorunluluklar</a>
+    <a href="#kap3">3. DATEV Kontları</a>
+    <a href="#kap4">4. Günlük Akış</a>
+    <a href="#kap5">5. Z-Raporu</a>
+    <a href="#kap6">6. Wechselgeld</a>
+    <a href="#kap7">7. Übertrag</a>
+    <a href="#kap8">8. Kartlı Satışlar</a>
+    <a href="#kap9">9. Gutschein</a>
+    <a href="#kap10">10. Wareneinkauf</a>
+    <a href="#kap11">11. Bankeinzahlung</a>
+    <a href="#kap12">12. KDV Ayrımı</a>
+    <a href="#kap13">13. Sık Yapılan Hatalar</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 1 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap1">
+  <span class="chapter-num">Bölüm 01</span>
+  <h2>Kassenbuch Nedir? / Was ist ein Kassenbuch?</h2>
+
+  <p>
+    Kassenbuch (Kasa Defteri), bir işletmedeki <strong>tüm nakit para hareketlerinin</strong> günlük olarak kaydedildiği yasal zorunlu bir defterdir. Almanya'da çift taraflı defter tutan (doppelte Buchführung) her işletme Kassenbuch tutmak zorundadır.
+  </p>
+
+  <p>
+    Basit bir dönerci dükkanı olarak senin için şu anlama gelir: Kasana giren ve kasandan çıkan <strong>her bir kuruş</strong> bu deftere yazılmalıdır. Müşteriden aldığın nakit para, Netto'dan aldığın domates parası, sabah koyduğun bozuk para — hepsi kayıt altında olmalı.
+  </p>
+
+  <div class="info-box">
+    <div class="box-title">Temel İlke</div>
+    Kassenbuch'un amacı: Herhangi bir anda kasadaki fiziksel nakit para miktarı ile defterdeki rakam <strong>birebir eşleşmelidir</strong>. Maliye (Finanzamt) geldiğinde kasanı sayar ve Kassenbuch'taki saldo ile karşılaştırır.
+  </div>
+
+  <h3>Kassenbuch'a neler yazılır?</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Hareket Türü</th>
+        <th>Kassenbuch'a Yazılır mı?</th>
+        <th>Açıklama</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Nakit satış (Z-Bericht BAR kısmı)</td>
+        <td class="yes">✓ EVET</td>
+        <td>Günlük toplam nakit satış</td>
+      </tr>
+      <tr>
+        <td>EC-Karte / Kreditkarte satışları</td>
+        <td class="no">✗ HAYIR</td>
+        <td>Bankaya gider, Kassenbuch'a yazılmaz</td>
+      </tr>
+      <tr>
+        <td>Wechselgeld koyma (Privateinlage)</td>
+        <td class="yes">✓ EVET</td>
+        <td>Kasaya özel para girişi</td>
+      </tr>
+      <tr>
+        <td>Wechselgeld çıkarma (Privatentnahme)</td>
+        <td class="yes">✓ EVET</td>
+        <td>Kasadan özel para çekimi</td>
+      </tr>
+      <tr>
+        <td>Küçük nakit alışveriş (Netto vb.)</td>
+        <td class="yes">✓ EVET</td>
+        <td>Kasadan nakit ödeme</td>
+      </tr>
+      <tr>
+        <td>Büyük alışveriş faturaları (et, toptan)</td>
+        <td class="no">✗ HAYIR</td>
+        <td>Muhasebeciye gider (banka/fatura ile ödenir)</td>
+      </tr>
+      <tr>
+        <td>Bankaya nakit yatırma</td>
+        <td class="yes">✓ EVET</td>
+        <td>Kasadan çıkış olarak kaydedilir</td>
+      </tr>
+      <tr>
+        <td>Gutschein satışı (nakit)</td>
+        <td class="yes">✓ EVET</td>
+        <td>0% USt ile kaydedilir</td>
+      </tr>
+      <tr>
+        <td>Maaşlar, kira, sigorta</td>
+        <td class="no">✗ HAYIR</td>
+        <td>Banka üzerinden — muhasebeci halleder</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 2 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap2">
+  <span class="chapter-num">Bölüm 02</span>
+  <h2>Yasal Zorunluluklar / Gesetzliche Pflichten</h2>
+
+  <p>
+    Kassenbuch tutma yükümlülüğü <strong>AO §146</strong> (Abgabenordnung) ve <strong>GoBD</strong> (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern) kurallarına dayanır. 2020'den itibaren TSE (Technische Sicherheitseinrichtung) zorunluluğu da geldi.
+  </p>
+
+  <h3>GoBD Kuralları — Altın Kurallar</h3>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Kassenminusverbot (Kasa Eksi Yasağı)</div>
+    Kasa bakiyesi <strong>HİÇBİR ZAMAN</strong> negatif olamaz! Eğer kasanda 50 € varsa ve 80 € harcaman gerekiyorsa, önce kasaya para koymalısın. Bu kural en çok denetlenen noktadır.
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">Temel GoBD İlkeleri</div>
+    <p><strong>Zeitnah (Zamanında):</strong> Kayıtlar en geç ertesi iş günü yapılmalı. İdeal olan aynı gün kayıt etmek.</p>
+    <p><strong>Lückenlos (Kesintisiz):</strong> Hiçbir gün atlanmamalı. Dükkan kapalı olsa bile "Ruhetag — kein Umsatz" yazılmalı.</p>
+    <p><strong>Unveränderbar (Değiştirilemez):</strong> Yapılmış kayıtlar silinemez veya üzerine yazılamaz. Hata varsa Stornobuchung (ters kayıt) yapılır.</p>
+    <p><strong>Einzelaufzeichnungspflicht:</strong> Her işlem tek tek kaydedilmelidir (Z-Bericht bu görevi yerine getirir).</p>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 TSE & Kasse</div>
+    Eğer elektronik kasan (Registrierkasse) varsa, TSE modülü zorunludur. Her Z-Bericht'te TSE imzası bulunmalıdır. Senin kasanın TSE uyumlu olduğundan emin ol.
+  </div>
+
+  <h3>Saklama Süreleri (Aufbewahrungsfrist)</h3>
+  <p>
+    Tüm Kassenbuch kayıtları, Z-Berichte, fişler ve belgeler <strong>10 yıl</strong> boyunca saklanmalıdır. Dijital ve kağıt ortamda saklamak en güvenlisi.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 3 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap3">
+  <span class="chapter-num">Bölüm 03</span>
+  <h2>DATEV Kontenrahmen (SKR03) / Hesap Kodları</h2>
+
+  <p>
+    Almanya'da çoğu muhasebeci DATEV SKR03 kontenrahmen kullanır. Dönerci olarak senin bilmen gereken hesap kodları aşağıdadır. Bu kodlar Kassenbuch'taki her kayıtta "Gegenkonto" (karşı hesap) olarak kullanılır.
+  </p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Konto Nr.</th>
+        <th>Hesap Adı</th>
+        <th>Ne Zaman Kullanılır?</th>
+        <th>Yön</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="konto-tag">1000</span></td>
+        <td>Kasse (Kasa)</td>
+        <td>Ana kasa hesabı — her işlemde otomatik</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1200</span></td>
+        <td>Bank (Banka)</td>
+        <td>Banka hesabı (kartlı satışlar buraya gider)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1360</span></td>
+        <td>Geldtransit</td>
+        <td>Kasadan bankaya nakit yatırırken</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1590</span></td>
+        <td>Durchlaufende Posten</td>
+        <td>Gutschein satışı (0% USt)</td>
+        <td>Giriş</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1800</span></td>
+        <td>Privatentnahme</td>
+        <td>Kasadan özel para çekme (Wechselgeld çıkarma)</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1890</span></td>
+        <td>Privateinlage</td>
+        <td>Kasaya özel para koyma (Wechselgeld koyma)</td>
+        <td>Giriş</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">3300</span></td>
+        <td>Wareneingang 7%</td>
+        <td>Gıda malzeme alışı — domates, ekmek vb.</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">3400</span></td>
+        <td>Wareneingang 19%</td>
+        <td>%19 KDV'li alışveriş — içecek, ambalaj vb.</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">4930</span></td>
+        <td>Bürobedarf</td>
+        <td>Ofis malzemesi — kalem, kağıt vb.</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">4980</span></td>
+        <td>Sonstige Kosten</td>
+        <td>Diğer giderler — temizlik malzemesi vb.</td>
+        <td>Çıkış</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">8100</span></td>
+        <td>Erlöse 7%</td>
+        <td>%7 KDV'li satış geliri (yemek — Döner, Dürüm vb.)</td>
+        <td>Giriş</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">8300</span></td>
+        <td>Erlöse 19%</td>
+        <td>%19 KDV'li satış geliri (içecekler)</td>
+        <td>Giriş</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 Dönerci İçin KDV Kuralı</div>
+    <p><span class="ust-tag ust7">7% USt</span> — Yemekler: Döner, Dürüm, Lahmacun, Pizza, Pommes (Mitnehmen / paket)</p>
+    <p><span class="ust-tag ust19">19% USt</span> — İçecekler: Cola, Ayran, Fanta + yerinde yeme (Verzehr vor Ort) durumunda yemek de %19</p>
+    <p><span class="ust-tag ust0">0% USt</span> — Gutschein satışı (henüz kullanılmadı)</p>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Önemli: Yerinde Yeme vs. Paket</div>
+    <p>Müşteri yerinde yerse (im Haus / Verzehr vor Ort) yemek de <strong>%19</strong> KDV'ye tabi! Paket servis (Außer Haus / zum Mitnehmen) ise <strong>%7</strong>. Kasa sisteminiz bunu otomatik ayırmalıdır.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 4 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap4">
+  <span class="chapter-num">Bölüm 04</span>
+  <h2>Günlük Akış / Täglicher Ablauf</h2>
+
+  <p>Bir dönerci olarak her gün yapman gereken işlem sırası:</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">07:00 — Dükkan Açılışı</div>
+      <div class="action"><strong>Wechselgeld Einlage:</strong> Kasaya 100 € bozuk para koy</div>
+      <div class="detail">Buchung: Kasse 1000 an Privateinlage 1890 → 100,00 €</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">07:00–22:00 — İş Günü</div>
+      <div class="action"><strong>Satışlar:</strong> Kasa otomatik olarak her satışı kaydeder (Bon)</div>
+      <div class="detail">Tek tek Kassenbuch'a yazılmasına gerek yok — Z-Bericht toplar</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">Gün İçi — Gerektiğinde</div>
+      <div class="action"><strong>Nakit Alışveriş:</strong> Netto'dan domates, ekmek vb. alırsan</div>
+      <div class="detail">Fişi sakla ve Kassenbuch'a "Barausgabe" olarak yaz</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Kapanış (1/4)</div>
+      <div class="action"><strong>Z-Bericht kes</strong> (Tagesabschluss)</div>
+      <div class="detail">Z-Bericht numarası ve BAR/Unbar ayrımını not et</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Kapanış (2/4)</div>
+      <div class="action"><strong>Z-Bericht BAR tutarını</strong> Kassenbuch'a yaz (7% ve 19% ayrı)</div>
+      <div class="detail">Buchung: Kasse 1000 an Erlöse 8100/8300</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Kapanış (3/4)</div>
+      <div class="action"><strong>Wechselgeld Entnahme:</strong> 100 € bozuk parayı geri çıkar</div>
+      <div class="detail">Buchung: Privatentnahme 1800 an Kasse 1000 → 100,00 €</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Kapanış (4/4)</div>
+      <div class="action"><strong>Kasa Sayımı:</strong> Fiziksel parayı say, Kassenbuch saldo ile karşılaştır</div>
+      <div class="detail">Fark varsa → Kassendifferenz olarak kaydet ve nedenini araştır</div>
+    </div>
+  </div>
+
+  <div class="info-box success">
+    <div class="box-title">✓ Günlük İşlem Sırası Özet</div>
+    Wechselgeld koy → Satış yap → Z-Bericht kes → BAR satışı kaydet → Küçük alışverişleri kaydet → Wechselgeld çıkar → Gerekirse bankaya yatır → Kasa say → Saldo kontrol
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 5 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap5">
+  <span class="chapter-num">Bölüm 05</span>
+  <h2>Z-Raporu / Z-Bericht</h2>
+
+  <p>
+    Z-Bericht (Z-Raporu), kasanın günlük kapanış raporudur. Bu rapor her gün kesilir ve artık değiştirilemez (sıfırlanır). TSE destekli kasalarda kriptografik imza ile güvence altındadır.
+  </p>
+
+  <h3>Z-Raporu'nda Ne Yazar?</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Alan</th>
+        <th>Açıklama</th>
+        <th>Kassenbuch'a Girer mi?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bruttoumsatz Gesamt</td>
+        <td>Toplam satış (BAR + Kart)</td>
+        <td class="no">Hayır — sadece BAR kısmı</td>
+      </tr>
+      <tr>
+        <td>Barumsatz</td>
+        <td>Nakit satış toplamı</td>
+        <td class="yes">✓ EVET — bu Kassenbuch'a girer</td>
+      </tr>
+      <tr>
+        <td>EC-Karte / Kreditkarte</td>
+        <td>Kartlı satış toplamı</td>
+        <td class="no">Hayır — banka ekstresi</td>
+      </tr>
+      <tr>
+        <td>USt 7% Anteil</td>
+        <td>%7 KDV'li satış toplamı</td>
+        <td class="yes">✓ EVET — ayrı satır</td>
+      </tr>
+      <tr>
+        <td>USt 19% Anteil</td>
+        <td>%19 KDV'li satış toplamı</td>
+        <td class="yes">✓ EVET — ayrı satır</td>
+      </tr>
+      <tr>
+        <td>Gutschein-Verkauf</td>
+        <td>Satılan hediye çeki</td>
+        <td class="yes">✓ EVET — 0% USt ayrı satır</td>
+      </tr>
+      <tr>
+        <td>Retouren / Storno</td>
+        <td>İade / iptal</td>
+        <td class="yes">✓ EVET — eksi olarak</td>
+      </tr>
+      <tr>
+        <td>Z-Bericht Nummer</td>
+        <td>Sıralı rapor numarası</td>
+        <td>Beleg-Nr. olarak</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Z-Bericht → Kassenbuch Buchung Örneği</h3>
+  <p>Diyelim Z-Bericht şunu gösteriyor:</p>
+  <p style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--text-dim); margin:0.5rem 0 1rem 0;">
+    Bruttoumsatz: 580,00 € | davon Bar: 420,00 € | davon EC-Karte: 160,00 €<br>
+    Bar davon 7%: 310,00 € | Bar davon 19%: 90,00 € | Gutschein: 20,00 €
+  </p>
+
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">8100 Erlöse 7%</span>
+    <span class="betrag">310,00 €</span>
+    <span class="desc">→ Tageseinnahme Bar lt. Z-Bericht — Yemek satışı %7</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">8300 Erlöse 19%</span>
+    <span class="betrag">90,00 €</span>
+    <span class="desc">→ Tageseinnahme Bar lt. Z-Bericht — İçecek satışı %19</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="betrag">20,00 €</span>
+    <span class="desc">→ Gutschein-Verkauf — 0% USt</span>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Kartlı 160 € nereye gidiyor?</div>
+    Hiçbir yere — Kassenbuch'a <strong>yazılmaz!</strong> Bu tutar otomatik olarak banka hesabına (1200) geçer ve banka ekstresinde görünür. Muhasebecin bunu banka tarafından işler.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 6 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap6">
+  <span class="chapter-num">Bölüm 06</span>
+  <h2>Wechselgeld (Bozuk Para) / Para Üstü Sistemi</h2>
+
+  <p>
+    Senin senaryonda her gün sabah 100 € koyup akşam 100 € çıkarıyorsun. Bu Kassenbuch'ta şu şekilde görünür:
+  </p>
+
+  <h3>Yöntem 1: Privateinlage / Privatentnahme (Basit)</h3>
+  <p>Bu en yaygın yöntem. Para senin özel paranmış gibi kaydedilir:</p>
+
+  <div class="buchung">
+    <span class="soll">SABAH</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1890 Privateinlage</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">→ "Wechselgeld Einlage" — Her günün İLK kaydı olmalı</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">AKŞAM</span>
+    <span class="konto">1800 Privatentnahme</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">→ "Wechselgeld Entnahme" — Z-Bericht'ten SONRA, günün son kaydı</span>
+  </div>
+
+  <h3>Yöntem 2: Tresor / Geldkassette Yöntemi (Profesyonel)</h3>
+  <p>Eğer Wechselgeld'i kasadan Tresor'a (kasa dışı güvenli kutu) aktarırsan:</p>
+
+  <div class="buchung">
+    <span class="haben">AKŞAM</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">→ Kasadan Tresor'a aktarım</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">SABAH</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">→ Tresor'dan kasaya aktarım</span>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 Hangi Yöntemi Seçmeliyim?</div>
+    Basit dönerci için <strong>Yöntem 1 (Privateinlage/Entnahme)</strong> yeterli ve daha kolay. Muhasebecin de bunu tercih edecektir. Tresor yöntemi daha büyük işletmeler içindir.
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Sıralama Çok Önemli!</div>
+    <p><strong>Sabah:</strong> ÖNCE Wechselgeld koy, SONRA satışa başla. Aksi halde kasa eksi'ye düşebilir!</p>
+    <p><strong>Akşam:</strong> ÖNCE Z-Bericht kaydet, SONRA Wechselgeld çıkar. Saldo'nun negatif olmamasına dikkat et!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 7 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap7">
+  <span class="chapter-num">Bölüm 07</span>
+  <h2>Übertrag (Devir) / Nasıl Yapılır?</h2>
+
+  <p>
+    Übertrag, bir günün son bakiyesinin (Kassenbestand) ertesi günün ilk bakiyesi olarak aktarılmasıdır. Bu zincirleme şekilde devam eder.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">Gün 1</span>
+      Endbestand:<br><strong>340,65 €</strong>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="step-num">Gün 2</span>
+      Vortrag:<br><strong>340,65 €</strong>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="step-num">Gün 2</span>
+      + İşlemler<br>Endbestand: <strong>155,65 €</strong>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="step-num">Gün 3</span>
+      Vortrag:<br><strong>155,65 €</strong>
+    </div>
+  </div>
+
+  <h3>Übertrag Formülü</h3>
+  <div class="info-box">
+    <div class="box-title">Formül</div>
+    <p style="font-family:'JetBrains Mono',monospace; font-size:0.95rem; text-align:center;">
+      <strong>Vortrag + Tageseinnahmen − Tagesausgaben = Endbestand (= nächster Vortrag)</strong>
+    </p>
+  </div>
+
+  <h3>Ay Sonu Devir</h3>
+  <p>
+    Ayın son günündeki Endbestand, bir sonraki ayın ilk günüdeki Vortrag olur. Genellikle ay sonunda kasada çok para birikmemesi için bankaya yatırılır (Geldtransit 1360) ve kasa düşük bakiye ile yeni aya başlar.
+  </p>
+
+  <h3>Tresor'a Aktarma Gerekli mi?</h3>
+  <p>
+    Zorunlu değil ama tavsiye edilir. Kasada çok nakit biriktirmek riskli (hırsızlık, yangın). Haftada 1-2 kez bankaya nakit yatırmak iyi bir uygulamadır. Senin örneğinde haftada 2 kez bankaya yatırma yaptık.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 8 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap8">
+  <span class="chapter-num">Bölüm 08</span>
+  <h2>Kartlı Satışlar / EC-Karte & Kreditkarte</h2>
+
+  <p>
+    Bu konu en çok karıştırılan noktalardan biri. Kural çok basit:
+  </p>
+
+  <div class="info-box success">
+    <div class="box-title">✓ Altın Kural</div>
+    Kartlı satışlar Kassenbuch'a <strong>YAZILMAZ</strong>. Kasa = Nakit. Kart = Banka. Bu kadar.
+  </div>
+
+  <h3>Z-Bericht'te Ayrım Nasıl Yapılır?</h3>
+  <p>Z-Bericht genellikle şu bilgileri verir:</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Z-Bericht Satırı</th>
+        <th>Tutar</th>
+        <th>Nereye Gider?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bruttoumsatz Gesamt</td>
+        <td>580,00 €</td>
+        <td>Hiçbir yere (toplam)</td>
+      </tr>
+      <tr>
+        <td><strong>Barzahlung</strong></td>
+        <td><strong>420,00 €</strong></td>
+        <td class="yes"><strong>→ KASSENBUCH</strong></td>
+      </tr>
+      <tr>
+        <td>EC-Kartenzahlung</td>
+        <td>130,00 €</td>
+        <td>→ Bankkonto (1200)</td>
+      </tr>
+      <tr>
+        <td>Kreditkarte</td>
+        <td>30,00 €</td>
+        <td>→ Bankkonto (1200)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 Praxis-Tipp</div>
+    Kart satışlarını Z-Bericht'ten not al ve ayrı bir listede tut. Muhasebecin banka ekstresi ile eşleştirme yapar. Senin tek görevin: Kassenbuch'a sadece BAR satışı yazmak.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 9 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap9">
+  <span class="chapter-num">Bölüm 09</span>
+  <h2>Gutschein (Hediye Çeki) Satışı ve Bozulması</h2>
+
+  <p>Gutschein işlemi iki aşamalıdır:</p>
+
+  <h3>Aşama 1: Gutschein Satışı</h3>
+  <p>
+    Müşteri 20 € Gutschein satın aldığında, bu henüz bir "satış geliri" değildir. Çünkü müşteri henüz bir ürün almadı. Bu bir <strong>ön ödeme (Anzahlung)</strong> olarak kaydedilir ve KDV <strong>%0</strong>'dır.
+  </p>
+
+  <div class="buchung">
+    <span class="soll">SATIŞ</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="betrag">20,00 €</span>
+    <span class="desc">→ Gutschein-Verkauf Nr. GS-001 — 0% USt</span>
+  </div>
+
+  <h3>Aşama 2: Gutschein Bozulması (Einlösung)</h3>
+  <p>
+    Müşteri gelip Gutschein ile 18 € döner + 2 € Cola aldığında, artık gerçek satış yapılmış olur. Bu sefer ürün bazında KDV hesaplanır. Ama kasaya nakit girmediği için Kassenbuch'a doğrudan girmez — kasa zaten parayı önceden almıştı.
+  </p>
+
+  <div class="buchung">
+    <span class="haben">EINLÖSUNG</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="arrow">an</span>
+    <span class="konto">8100 Erlöse 7%</span>
+    <span class="betrag">18,00 €</span>
+    <span class="desc">→ Gutschein eingelöst — Döner %7</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">EINLÖSUNG</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="arrow">an</span>
+    <span class="konto">8300 Erlöse 19%</span>
+    <span class="betrag">2,00 €</span>
+    <span class="desc">→ Gutschein eingelöst — Cola %19</span>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 Gutschein Bozulmasını Kim İşler?</div>
+    Gutschein bozulması genellikle <strong>muhasebecin</strong> işler, çünkü kasaya nakit girmiyor. Senin görevin: Z-Bericht'te Gutschein-Einlösung'u not etmek ve muhasebecine bildirmek. Kasanın Z-Bericht'inde bu ayrım genellikle otomatik olarak çıkar.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 10 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap10">
+  <span class="chapter-num">Bölüm 10</span>
+  <h2>Wareneinkauf (Mal Alışı) — Netto'dan Domates</h2>
+
+  <p>
+    Senin senaryonda büyük alışverişler (100kg et vb.) faturayla olur ve muhasebeciye gider. Ama köşedeki Netto'dan aldığın küçük malzemeleri kasadan nakit ödüyorsun — bunlar Kassenbuch'a yazılmalı.
+  </p>
+
+  <h3>Nasıl Kayıt Edilir?</h3>
+
+  <div class="buchung">
+    <span class="haben">ÇIKIŞ</span>
+    <span class="konto">3300 Wareneing. 7%</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">23,45 €</span>
+    <span class="desc">→ Netto — Domates 5kg, Marul 2 Stk., Soğan 3kg (Beleg K-001)</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">ÇIKIŞ</span>
+    <span class="konto">3400 Wareneing. 19%</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">18,90 €</span>
+    <span class="desc">→ Netto — Cola 2 Kiste, Fanta 1 Kiste (Beleg K-002)</span>
+  </div>
+
+  <h3>Fişte Karışık KDV Oranları Varsa?</h3>
+  <p>
+    Netto fişinde hem %7 (gıda) hem %19 (içecek) ürünler varsa, bunları <strong>ayrı ayrı</strong> iki satır olarak Kassenbuch'a yazmalısın. Netto fişinin altında genellikle KDV ayrımı vardır ("A = 7%, B = 19%").
+  </p>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Beleg-Pflicht (Belge Zorunluluğu)</div>
+    Her nakit alışveriş için <strong>mutlaka fiş/fatura</strong> sakla! Belgesiz kayıt geçersiz sayılabilir. Fişleri kronolojik sırayla dosyala ve Beleg numarası ver (K-001, K-002 vb.).
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">Büyük vs. Küçük Alışveriş Ayrımı</div>
+    <table class="compare-table" style="margin:0.5rem 0 0 0;">
+      <thead>
+        <tr>
+          <th>Alışveriş Türü</th>
+          <th>Ödeme Şekli</th>
+          <th>Kim İşler?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>100kg et, toptan döner eti</td>
+          <td>Fatura / Überweisung</td>
+          <td>Muhasebeci</td>
+        </tr>
+        <tr>
+          <td>Netto'dan 5kg domates</td>
+          <td>Kasadan nakit</td>
+          <td>Sen — Kassenbuch</td>
+        </tr>
+        <tr>
+          <td>Metro'dan büyük alışveriş</td>
+          <td>Fatura / Karte</td>
+          <td>Muhasebeci</td>
+        </tr>
+        <tr>
+          <td>Temizlik malzemesi (DM)</td>
+          <td>Kasadan nakit</td>
+          <td>Sen — Kassenbuch</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 11 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap11">
+  <span class="chapter-num">Bölüm 11</span>
+  <h2>Bankeinzahlung / Kasadan Bankaya Para Yatırma</h2>
+
+  <p>
+    Kasada biriken nakit parayı bankaya yatırdığında, bu Kassenbuch'ta bir <strong>Ausgabe (çıkış)</strong> olarak kaydedilir. Para kasadan çıktığı için kasa bakiyesi düşer.
+  </p>
+
+  <div class="buchung">
+    <span class="haben">ÇIKIŞ</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">600,00 €</span>
+    <span class="desc">→ Bareinzahlung auf Bankkonto — Einzahlungsbeleg Nr. T-001</span>
+  </div>
+
+  <h3>Neden 1360 (Geldtransit)?</h3>
+  <p>
+    Doğrudan 1200 (Bank) kullanılmaz çünkü para kasadan çıkıp bankaya ulaşana kadar bir "transit" süre vardır. Banka ekstresi geldiğinde muhasebecin şu kaydı yapar:
+  </p>
+
+  <div class="buchung">
+    <span class="soll">BANKA</span>
+    <span class="konto">1200 Bank</span>
+    <span class="arrow">an</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="betrag">600,00 €</span>
+    <span class="desc">→ Bu kaydı muhasebeci yapar — banka ekstresi ile</span>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">1</span>
+      Kasse 1000<br>−600 €
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="step-num">2</span>
+      Geldtransit 1360<br>(geçici)
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="step-num">3</span>
+      Bank 1200<br>+600 €
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">💡 Ne Sıklıkla Bankaya Yatırmalı?</div>
+    Dönerci olarak haftada 1-2 kez yeterli. Kasada çok nakit biriktirme — hem güvenlik riski hem de maliye denetimlerinde sorun olabilir. Bankamatik'ten yatırırsan makbuzu sakla!
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 12 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap12">
+  <span class="chapter-num">Bölüm 12</span>
+  <h2>KDV Ayrımı / Umsatzsteuer 7% vs. 19%</h2>
+
+  <p>
+    Gastronomide KDV ayrımı çok önemli ve en çok hata yapılan alandır.
+  </p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Ürün / Durum</th>
+        <th>Paket (Außer Haus)</th>
+        <th>Yerinde (Im Haus)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Döner im Brot</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Dürüm</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Lahmacun</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Pommes Frites</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Pizza</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Cola, Fanta, Wasser</td>
+        <td><span class="ust-tag ust19">19%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Ayran</td>
+        <td><span class="ust-tag ust7">7%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Bier / Alkol</td>
+        <td><span class="ust-tag ust19">19%</span></td>
+        <td><span class="ust-tag ust19">19%</span></td>
+      </tr>
+      <tr>
+        <td>Gutschein-Verkauf</td>
+        <td colspan="2"><span class="ust-tag ust0">0%</span> — Einlösung'da hesaplanır</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box warning">
+    <div class="box-title">⚠ Ayran Sonderfall</div>
+    Ayran süt ürünü sayıldığı için paket serviste %7 KDV'ye tabidir. Ama yerinde içildiğinde %19 olur. Kasa sisteminizde bunu doğru ayarlayın!
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">Kassenbuch'ta KDV Nasıl Gösterilir?</div>
+    Z-Bericht'teki BAR satışları KDV oranlarına göre ayrı satırlarda yazılır. Kasanın Z-Raporu'nda bu ayrım otomatik hesaplanır. Senin yapman gereken sadece bu tutarları doğru Gegenkonto'ya (8100 veya 8300) yazmak.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 13 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap13">
+  <span class="chapter-num">Bölüm 13</span>
+  <h2>Sık Yapılan Hatalar / Häufige Fehler</h2>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">#</th>
+        <th>Hata</th>
+        <th>Doğrusu</th>
+        <th>Sonuç</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td class="no">Kartlı satışları Kassenbuch'a yazmak</td>
+        <td class="yes">Sadece BAR satışları yazılır</td>
+        <td>Kasa sayımında fark çıkar</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td class="no">Kasa bakiyesinin eksiye düşmesi</td>
+        <td class="yes">Önce Einlage yap, sonra harca</td>
+        <td>Betriebsprüfung'da ciddi sorun</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td class="no">Z-Bericht kesmeden günü kapatmak</td>
+        <td class="yes">Her gün Z-Bericht kesilmeli</td>
+        <td>Kayıt eksikliği — GoBD ihlali</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td class="no">Belgesiz (fişsiz) kayıt yapmak</td>
+        <td class="yes">Her kayıda Beleg (fiş/fatura)</td>
+        <td>Kayıt tanınmaz — vergi cezası</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td class="no">Günleri atlamak (yazım yapmamak)</td>
+        <td class="yes">Her gün kayıt — kapalı gün bile</td>
+        <td>Lückenlos (kesintisiz) kuralı ihlali</td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td class="no">7% ve 19% karıştırmak</td>
+        <td class="yes">Z-Bericht'ten ayrı ayrı oku</td>
+        <td>KDV beyanında yanlışlık</td>
+      </tr>
+      <tr>
+        <td><strong>7</strong></td>
+        <td class="no">Eski kayıtları silip düzeltmek</td>
+        <td class="yes">Stornobuchung (ters kayıt) yap</td>
+        <td>GoBD "unveränderbar" kuralı ihlali</td>
+      </tr>
+      <tr>
+        <td><strong>8</strong></td>
+        <td class="no">Gutschein'ı doğrudan satış geliri yazmak</td>
+        <td class="yes">1590 Durchl. Posten olarak kaydet</td>
+        <td>KDV'yi yanlış zamanda ödersin</td>
+      </tr>
+      <tr>
+        <td><strong>9</strong></td>
+        <td class="no">Kasada çok nakit biriktirmek</td>
+        <td class="yes">Düzenli bankaya yatır</td>
+        <td>Güvenlik riski + denetimde şüphe</td>
+      </tr>
+      <tr>
+        <td><strong>10</strong></td>
+        <td class="no">TSE olmadan kasa kullanmak</td>
+        <td class="yes">TSE modülü zorunlu (2020+)</td>
+        <td>10.000 € + ceza riski</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box success">
+    <div class="box-title">✓ Altın Kurallar Özeti</div>
+    <p>1. Her gün Z-Bericht kes ve sakla</p>
+    <p>2. Sadece BAR hareketleri Kassenbuch'a yaz</p>
+    <p>3. Kasa bakiyesi ASLA eksi olamaz</p>
+    <p>4. Her kayıda belge (fiş/fatura) ekle</p>
+    <p>5. Hiçbir gün atlama — kapalı gün bile kayıt yap</p>
+    <p>6. Düzenli bankaya para yatır</p>
+    <p>7. 7% ve 19% ayrımını doğru yap</p>
+    <p>8. Hata varsa silme — Storno yap</p>
+  </div>
+</div>
+
+<footer>
+  <p>Kassenbuch Anleitung — Döner Imbiss · Beispiel & Erklärung</p>
+  <p>Dies ist keine Steuerberatung. Bitte mit Ihrem Steuerberater abstimmen.</p>
+  <p style="margin-top:0.5rem;">Zugehörige Datei: <a href="kassenbuch.html">kassenbuch.html</a> — Monatsbeispiel Januar 2025</p>
+</footer>
+
+</div>
+</body>
+</html>

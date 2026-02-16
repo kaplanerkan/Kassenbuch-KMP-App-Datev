@@ -1,0 +1,46 @@
+-- Tagesabschluesse — Zusammenfassung eines Geschaeftstages
+CREATE TABLE IF NOT EXISTS tagesabschluesse (
+    datum             TEXT NOT NULL PRIMARY KEY,
+    vortrag           REAL NOT NULL,
+    summeEinnahmen    REAL NOT NULL,
+    summeAusgaben     REAL NOT NULL,
+    endbestand        REAL NOT NULL,
+    zBerichtNr        TEXT NOT NULL DEFAULT '',
+    gezaehlterBestand REAL,
+    differenz         REAL,
+    geschlossen       INTEGER NOT NULL DEFAULT 0,
+    notiz             TEXT NOT NULL DEFAULT '',
+    erstelltAm        INTEGER NOT NULL
+);
+
+-- ══════════════════════════════════════
+-- Einfuegen
+-- ══════════════════════════════════════
+
+insertAbschluss:
+INSERT OR REPLACE INTO tagesabschluesse (
+    datum, vortrag, summeEinnahmen, summeAusgaben, endbestand,
+    zBerichtNr, gezaehlterBestand, differenz, geschlossen, notiz, erstelltAm
+) VALUES (
+    ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?
+);
+
+-- ══════════════════════════════════════
+-- Abfragen
+-- ══════════════════════════════════════
+
+fuerTag:
+SELECT * FROM tagesabschluesse WHERE datum = ?;
+
+alle:
+SELECT * FROM tagesabschluesse ORDER BY datum DESC;
+
+fuerZeitraum:
+SELECT * FROM tagesabschluesse WHERE datum BETWEEN ? AND ? ORDER BY datum ASC;
+
+letzterEndbestandVor:
+SELECT endbestand FROM tagesabschluesse WHERE datum < ? ORDER BY datum DESC LIMIT 1;
+
+existiert:
+SELECT EXISTS(SELECT 1 FROM tagesabschluesse WHERE datum = ?);
