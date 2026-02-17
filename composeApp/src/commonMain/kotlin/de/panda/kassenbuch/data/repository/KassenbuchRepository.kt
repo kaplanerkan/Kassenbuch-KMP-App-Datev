@@ -204,6 +204,11 @@ class KassenbuchRepository(
                 .toInt()
         }
 
+    suspend fun gesamtAnzahl(): Long =
+        withContext(Dispatchers.Default) {
+            buchungenQueries.gesamtAnzahl().executeAsOne()
+        }
+
     suspend fun alleTagesMitBuchungen(): List<LocalDate> =
         withContext(Dispatchers.Default) {
             buchungenQueries.alleTagesMitBuchungen()

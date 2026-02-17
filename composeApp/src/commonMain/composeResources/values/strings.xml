@@ -143,6 +143,20 @@
     <string name="all">Alle</string>
     <string name="bu_prefix">BU</string>
 
+    <!-- Datenbank -->
+    <string name="nav_database">Datenbank</string>
+    <string name="database_title">Datenbank-Verwaltung</string>
+    <string name="database_backup">Backup erstellen</string>
+    <string name="database_backup_desc">Erstellt eine Sicherungskopie der Datenbank als ZIP-Datei</string>
+    <string name="database_backup_list">Vorhandene Backups</string>
+    <string name="database_restore">Wiederherstellen</string>
+    <string name="database_restore_desc">Stellt die Datenbank aus einer Backup-Datei wieder her</string>
+    <string name="database_restore_warning">Die aktuelle Datenbank wird überschrieben! Alle nicht gesicherten Daten gehen verloren.</string>
+    <string name="database_confirm_restore">Wirklich wiederherstellen?</string>
+    <string name="database_no_backups">Keine Backups vorhanden</string>
+    <string name="database_import_zip">ZIP importieren</string>
+    <string name="database_info_text">Backups werden als ZIP-Datei gespeichert und enthalten die komplette Datenbank. Nach einer Wiederherstellung muss die App neu gestartet werden.</string>
+
     <!-- Steuersätze -->
     <string name="tax_0">0% (steuerfrei)</string>
     <string name="tax_7">7% USt</string>

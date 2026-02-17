@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kassenbuch — Döner Imbiss — Januar 2025 (Vollständig)</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232734;
+    --border: #2e3345;
+    --text: #e4e7f0;
+    --text-dim: #8b90a5;
+    --accent: #4f8cff;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --purple: #a855f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 1.5rem;
+  }
+  .container { max-width: 1500px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  header h1 span { color: var(--accent); }
+  header .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.25rem; }
+
+  .info-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .info-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .info-item .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+  }
+  .info-item .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 0.2rem;
+  }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+  .t-wg { background: rgba(52,211,153,0.15); color: var(--green); }
+  .t-we { background: rgba(248,113,113,0.15); color: var(--red); }
+  .t-u7 { background: rgba(79,140,255,0.15); color: var(--accent); }
+  .t-u19 { background: rgba(251,146,60,0.15); color: var(--orange); }
+  .t-gs { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .t-wr7 { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .t-wr19 { background: rgba(251,191,36,0.10); color: #d4a017; }
+  .t-so { background: rgba(251,146,60,0.10); color: #e07b3a; }
+  .t-bk { background: rgba(168,85,247,0.10); color: var(--purple); }
+  .t-ru { background: rgba(139,144,165,0.15); color: var(--text-dim); }
+
+  .table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 0.85rem 0.6rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 10;
+  }
+  thead th.r { text-align: right; }
+  tbody tr { border-bottom: 1px solid rgba(46,51,69,0.5); transition: background 0.12s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 0.45rem 0.6rem; vertical-align: middle; }
+  td.r { text-align: right; }
+
+  .day-hdr td {
+    background: var(--surface2);
+    border-top: 2px solid var(--accent);
+    padding: 0.6rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+  .day-hdr td .wday { color: var(--text-dim); font-weight: 400; font-size: 0.72rem; margin-left: 0.5rem; }
+  .day-hdr td .vortrag {
+    float: right;
+    color: var(--yellow);
+    font-size: 0.75rem;
+  }
+
+  .sub td {
+    background: rgba(79,140,255,0.04);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--accent);
+    padding: 0.5rem 0.6rem;
+    border-top: 1px solid var(--accent);
+  }
+
+  .ein { color: var(--green); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .aus { color: var(--red); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .sal { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent); }
+  .blg { font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-size: 0.7rem; }
+  .knt { font-family: 'JetBrains Mono', monospace; color: var(--orange); font-size: 0.73rem; }
+
+  .closed td { color: var(--text-dim); font-style: italic; }
+
+  /* Summary section */
+  .summary {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 0.75rem;
+  }
+  .s-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .s-card .s-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+  .s-card .s-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 0.15rem;
+  }
+
+  /* Export Section */
+  .export-section {
+    margin-top: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .export-section h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .export-section .export-desc {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+  .export-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: #fff;
+  }
+  .btn:hover { transform: translateY(-1px); filter: brightness(1.15); }
+  .btn:active { transform: translateY(0); }
+  .btn-datev { background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%); }
+  .btn-csv { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); }
+  .btn-print { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
+  .btn .icon { font-size: 1.1rem; }
+
+  .datev-info {
+    margin-top: 1.25rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .datev-info strong { color: var(--yellow); }
+  .datev-info code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(79,140,255,0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--green);
+    color: #000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  @media print {
+    body { background: #fff; color: #000; padding: 0.5rem; font-size: 9pt; }
+    header, .info-item, .table-wrapper, .s-card, .legend { background: #fff; border-color: #bbb; }
+    thead th { background: #f0f0f0; color: #333; border-color: #999; }
+    .day-hdr td { background: #e8e8e8; color: #1a56db; border-color: #1a56db; }
+    .sub td { background: #f5f5f5; color: #1a56db; border-color: #1a56db; }
+    .ein { color: #059669; } .aus { color: #dc2626; } .sal { color: #1a56db; }
+    .knt { color: #c2410c; }
+    :root { --accent: #1a56db; --text-dim: #555; --border: #bbb; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>KASSEN<span>BUCH</span></h1>
+  <div class="subtitle">Mustafa's Döner Imbiss · Musterstraße 12, 12345 Musterstadt · Januar 2025 · SKR03 · Konto 1000</div>
+</header>
+
+<div class="info-bar">
+  <div class="info-item">
+    <div class="label">Anfangsbestand 01.01.</div>
+    <div class="val">0,00 €</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Wechselgeld / Tag</div>
+    <div class="val">100,00 €</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Kassenbuch Nr.</div>
+    <div class="val">KB-2025-01</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Steuernummer</div>
+    <div class="val" style="font-size:0.9rem;">123/456/78901</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="tag t-wg">WG+ Wechselgeld Einlage</span>
+  <span class="tag t-we">WG− Wechselgeld Entnahme</span>
+  <span class="tag t-u7">Umsatz 7%</span>
+  <span class="tag t-u19">Umsatz 19%</span>
+  <span class="tag t-gs">Gutschein 0%</span>
+  <span class="tag t-wr7">Ware 7%</span>
+  <span class="tag t-wr19">Ware 19%</span>
+  <span class="tag t-so">Sonstig</span>
+  <span class="tag t-bk">Bank</span>
+  <span class="tag t-ru">Ruhetag</span>
+</div>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+  <th style="width:3%">Nr.</th>
+  <th style="width:7%">Datum</th>
+  <th style="width:6%">Beleg</th>
+  <th>Buchungstext</th>
+  <th style="width:5%">Typ</th>
+  <th style="width:5%">Gegen&shy;konto</th>
+  <th class="r" style="width:8%">Einnahme €</th>
+  <th class="r" style="width:8%">Ausgabe €</th>
+  <th class="r" style="width:9%">Saldo €</th>
+</tr>
+</thead>
+<tbody id="kb">
+</tbody>
+</table>
+</div>
+
+<div class="summary" id="summary"></div>
+
+<!-- EXPORT SECTION -->
+<div class="export-section">
+  <h3>📤 Daten Export</h3>
+  <div class="export-desc">
+    DATEV-Format: Muhasebecinin doğrudan DATEV yazılımına aktarabileceği standart Buchungsstapel CSV formatı.
+    Sütun yapısı DATEV Formatbeschreibung v12.0'a uygun olarak oluşturulur.
+  </div>
+  <div class="export-btns">
+    <button class="btn btn-datev" onclick="exportDATEV()">
+      <span class="icon">📊</span> DATEV Buchungsstapel (CSV)
+    </button>
+    <button class="btn btn-csv" onclick="exportSimpleCSV()">
+      <span class="icon">📋</span> Einfaches Kassenbuch (CSV)
+    </button>
+    <button class="btn btn-print" onclick="window.print()">
+      <span class="icon">🖨️</span> Drucken / PDF
+    </button>
+  </div>
+
+  <div class="datev-info">
+    <strong>DATEV Buchungsstapel Bilgileri:</strong><br>
+    Dosya formatı: <code>UTF-8 CSV</code> · Ayraç: <code>Semikolon (;)</code> · Ondalık: <code>Komma (,)</code><br>
+    İlk 2 satır: DATEV Header (Formatversion, Berater-Nr, Mandant-Nr, WJ-Beginn, Datum von/bis, Sachkontenlänge vb.)<br>
+    Sütunlar: <code>Umsatz</code> · <code>Soll/Haben</code> · <code>Konto</code> · <code>Gegenkonto</code> · <code>BU-Schlüssel</code> · <code>Belegdatum</code> · <code>Belegfeld1</code> · <code>Buchungstext</code><br>
+    <strong>BU-Schlüssel:</strong> <code>2 = 7% USt</code> · <code>3 = 19% USt</code> · <code>8 = 7% VSt</code> · <code>9 = 19% VSt</code> · <code>40 = ohne USt</code><br>
+    <strong>Not:</strong> Muhasebecine göndermeden önce Berater-Nr ve Mandant-Nr bilgilerini düzenle!
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Datei heruntergeladen!</div>
+
+<footer>
+  Kassenbuch erstellt als Muster · Keine Steuerberatung · Bitte mit Ihrem Steuerberater abstimmen<br>
+  Alle Z-Berichte, Belege und Quittungen sind 10 Jahre aufzubewahren (§147 AO)
+</footer>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA: 30 Days of Döner Imbiss Kassenbuch
+// ═══════════════════════════════════════════
+
+const DAYS_DE = ['Mi','Do','Fr','Sa','So','Mo','Di','Mi','Do','Fr','Sa','So','Mo','Di','Mi','Do','Fr','Sa','So','Mo','Di','Mi','Do','Fr','Sa','So','Mo','Di','Mi','Do'];
+
+// Each day: { closed?, bar7, bar19, gs, purchases:[ {text, konto, amount} ], bankEinz }
+const days = [
+  // 01.01. Mi — Neujahr geschlossen
+  { closed: true, note: "Neujahr — Feiertag / Geschlossen" },
+  // 02.01. Do
+  { bar7: 285, bar19: 78, gs: 20, purchases: [
+    { text: "Netto — Tomaten, Salat, Zwiebeln", konto: "3300", amount: 23.45 },
+    { text: "Netto — Getränke Nachkauf (Cola, Fanta)", konto: "3400", amount: 18.90 }
+  ]},
+  // 03.01. Fr
+  { bar7: 320, bar19: 95, purchases: [
+    { text: "Netto — Fladenbrot 20 Stk.", konto: "3300", amount: 14.80 }
+  ], bankEinz: 500 },
+  // 04.01. Sa — yoğun
+  { bar7: 410, bar19: 125, gs: 10, purchases: [
+    { text: "Netto — Eisbergsalat, Rotkohl, Gurken", konto: "3300", amount: 19.60 },
+    { text: "Netto — Ayran 2 Kisten", konto: "3300", amount: 16.80 }
+  ]},
+  // 05.01. So
+  { bar7: 260, bar19: 65, purchases: [
+    { text: "Netto — Servietten, Alufolie", konto: "3400", amount: 8.50 }
+  ], bankEinz: 800 },
+  // 06.01. Mo
+  { bar7: 245, bar19: 62, purchases: [
+    { text: "Netto — Tomaten 5kg, Petersilie", konto: "3300", amount: 12.30 },
+    { text: "DM — Reinigungsmittel", konto: "4980", amount: 9.99 }
+  ]},
+  // 07.01. Di
+  { bar7: 275, bar19: 72, purchases: [
+    { text: "Netto — Zwiebeln 5kg, Paprika", konto: "3300", amount: 11.20 }
+  ], bankEinz: 600 },
+  // 08.01. Mi
+  { bar7: 290, bar19: 80, purchases: [
+    { text: "Netto — Pommes Frites 10kg TK", konto: "3300", amount: 22.50 },
+    { text: "Netto — Cola, Fanta Nachfüllung", konto: "3400", amount: 15.60 }
+  ]},
+  // 09.01. Do
+  { bar7: 265, bar19: 68, gs: 15, purchases: [
+    { text: "Netto — Salatmischung, Rotkohl", konto: "3300", amount: 9.80 }
+  ]},
+  // 10.01. Fr
+  { bar7: 340, bar19: 98, purchases: [
+    { text: "Netto — Fladenbrot 25 Stk.", konto: "3300", amount: 18.50 },
+    { text: "Netto — Verpackungsboxen", konto: "3400", amount: 12.40 }
+  ], bankEinz: 700 },
+  // 11.01. Sa — yoğun
+  { bar7: 420, bar19: 135, gs: 25, purchases: [
+    { text: "Netto — Tomaten 8kg, Gurken 3kg", konto: "3300", amount: 21.30 },
+    { text: "Netto — Wasser, Eistee Kisten", konto: "3400", amount: 19.90 }
+  ]},
+  // 12.01. So
+  { bar7: 270, bar19: 70, purchases: [
+    { text: "Netto — Eisbergsalat 10 Stk.", konto: "3300", amount: 13.50 }
+  ], bankEinz: 900 },
+  // 13.01. Mo
+  { bar7: 235, bar19: 58, purchases: [
+    { text: "Netto — Zwiebeln, Knoblauch", konto: "3300", amount: 8.70 },
+    { text: "Bürobedarf — Kassenrollen, Stifte", konto: "4930", amount: 14.50 }
+  ]},
+  // 14.01. Di
+  { bar7: 255, bar19: 66, purchases: [
+    { text: "Netto — Joghurt für Soße, Gewürze", konto: "3300", amount: 16.40 }
+  ], bankEinz: 500 },
+  // 15.01. Mi
+  { bar7: 280, bar19: 75, gs: 20, purchases: [
+    { text: "Netto — Tomaten, Paprika, Petersilie", konto: "3300", amount: 14.90 },
+    { text: "Netto — Cola 3 Kisten", konto: "3400", amount: 21.60 }
+  ]},
+  // 16.01. Do
+  { bar7: 260, bar19: 70, purchases: [
+    { text: "Netto — Fladenbrot 20 Stk., Sesamring", konto: "3300", amount: 17.80 }
+  ]},
+  // 17.01. Fr
+  { bar7: 350, bar19: 105, purchases: [
+    { text: "Netto — Salat, Rotkohl, Gurken", konto: "3300", amount: 15.20 }
+  ], bankEinz: 750 },
+  // 18.01. Sa — yoğun
+  { bar7: 435, bar19: 140, gs: 30, purchases: [
+    { text: "Netto — Großeinkauf Gemüse", konto: "3300", amount: 32.50 },
+    { text: "Netto — Getränke Großeinkauf", konto: "3400", amount: 28.40 }
+  ]},
+  // 19.01. So
+  { bar7: 250, bar19: 62, purchases: [
+    { text: "Netto — Servietten, Tüten", konto: "3400", amount: 7.80 }
+  ], bankEinz: 850 },
+  // 20.01. Mo
+  { bar7: 240, bar19: 60, purchases: [
+    { text: "Netto — Tomaten, Zwiebeln, Knoblauch", konto: "3300", amount: 13.60 },
+    { text: "DM — Spülmittel, Handschuhe", konto: "4980", amount: 11.20 }
+  ]},
+  // 21.01. Di
+  { bar7: 258, bar19: 67, purchases: [
+    { text: "Netto — Joghurt, Minze, Zitrone", konto: "3300", amount: 10.90 }
+  ], bankEinz: 550 },
+  // 22.01. Mi
+  { bar7: 275, bar19: 74, purchases: [
+    { text: "Netto — Fladenbrot 20 Stk.", konto: "3300", amount: 14.80 },
+    { text: "Netto — Ayran 2 Kisten", konto: "3300", amount: 16.80 }
+  ]},
+  // 23.01. Do
+  { bar7: 262, bar19: 69, gs: 10, purchases: [
+    { text: "Netto — Paprika, Peperoni, Salat", konto: "3300", amount: 12.40 }
+  ]},
+  // 24.01. Fr
+  { bar7: 345, bar19: 102, purchases: [
+    { text: "Netto — Pommes TK 10kg, Nuggets TK", konto: "3300", amount: 26.50 },
+    { text: "Netto — Fanta, Sprite Nachfüllung", konto: "3400", amount: 14.20 }
+  ], bankEinz: 700 },
+  // 25.01. Sa — yoğun
+  { bar7: 445, bar19: 148, gs: 15, purchases: [
+    { text: "Netto — Großeinkauf Gemüse (Sa)", konto: "3300", amount: 29.80 },
+    { text: "Netto — Getränke Wochenende", konto: "3400", amount: 24.50 }
+  ]},
+  // 26.01. So
+  { bar7: 255, bar19: 64, purchases: [
+    { text: "Netto — Eisbergsalat, Rotkohl", konto: "3300", amount: 11.60 }
+  ], bankEinz: 850 },
+  // 27.01. Mo
+  { bar7: 242, bar19: 61, purchases: [
+    { text: "Netto — Tomaten 5kg, Gurken 3kg", konto: "3300", amount: 14.20 },
+    { text: "Bürobedarf — Druckerpapier", konto: "4930", amount: 8.99 }
+  ]},
+  // 28.01. Di
+  { bar7: 268, bar19: 71, purchases: [
+    { text: "Netto — Gewürze, Soßenzutaten", konto: "3300", amount: 18.30 }
+  ], bankEinz: 600 },
+  // 29.01. Mi
+  { bar7: 282, bar19: 76, gs: 20, purchases: [
+    { text: "Netto — Fladenbrot 25 Stk.", konto: "3300", amount: 18.50 },
+    { text: "Netto — Cola, Wasser Kisten", konto: "3400", amount: 17.80 }
+  ]},
+  // 30.01. Do — Monatsende, alles zur Bank
+  { bar7: 298, bar19: 85, purchases: [
+    { text: "Netto — Tomaten, Salat (Monatsende)", konto: "3300", amount: 15.70 }
+  ], bankEinzAll: true }
+];
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+let saldo = 0;
+let rowNum = 0;
+let totalEin = 0, totalAus = 0;
+let sumBar7 = 0, sumBar19 = 0, sumGS = 0;
+let sumWare = 0, sumSonstig = 0, sumBank = 0;
+let sumWGein = 0, sumWGaus = 0;
+
+const tbody = document.getElementById('kb');
+
+function fmt(n) {
+  return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function addRow(cls, nr, datum, beleg, text, typ, gk, ein, aus) {
+  const tr = document.createElement('tr');
+  if (cls) tr.className = cls;
+  
+  const einStr = ein ? fmt(ein) : '';
+  const ausStr = aus ? fmt(aus) : '';
+  
+  if (ein) { saldo += ein; totalEin += ein; }
+  if (aus) { saldo -= aus; totalAus += aus; }
+  
+  tr.innerHTML = `
+    <td>${nr || ''}</td>
+    <td>${datum || ''}</td>
+    <td class="blg">${beleg || ''}</td>
+    <td>${text}</td>
+    <td>${typ || ''}</td>
+    <td class="knt">${gk || ''}</td>
+    <td class="r ein">${einStr}</td>
+    <td class="r aus">${ausStr}</td>
+    <td class="r sal">${fmt(saldo)}</td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function addDayHeader(dayNum) {
+  const datum = String(dayNum).padStart(2,'0') + '.01.2025';
+  const wday = DAYS_DE[dayNum - 1];
+  const tr = document.createElement('tr');
+  tr.className = 'day-hdr';
+  tr.innerHTML = `<td colspan="9">
+    📅 ${datum} <span class="wday">${wday}</span>
+    <span class="vortrag">Vortrag: ${fmt(saldo)} €</span>
+  </td>`;
+  tbody.appendChild(tr);
+}
+
+function addSubtotal(dayNum, dayEin, dayAus) {
+  const tr = document.createElement('tr');
+  tr.className = 'sub';
+  tr.innerHTML = `
+    <td></td><td></td><td></td>
+    <td>Tagesabschluss ${String(dayNum).padStart(2,'0')}.01. → Übertrag</td>
+    <td></td><td></td>
+    <td class="r">${fmt(dayEin)}</td>
+    <td class="r">${fmt(dayAus)}</td>
+    <td class="r">${fmt(saldo)}</td>
+  `;
+  tbody.appendChild(tr);
+}
+
+days.forEach((day, i) => {
+  const dayNum = i + 1;
+  const dd = String(dayNum).padStart(2, '0') + '.01.';
+  
+  addDayHeader(dayNum);
+  
+  let dayEin = 0, dayAus = 0;
+  
+  if (day.closed) {
+    // Geschlossen — nur Wechselgeld rein/raus
+    rowNum++;
+    addRow('', rowNum, dd, `E-${String(dayNum).padStart(3,'0')}`, 'Wechselgeld Einlage (Privateinlage)', `<span class="tag t-wg">WG+</span>`, '1890', 100, null);
+    dayEin += 100; sumWGein += 100;
+    
+    rowNum++;
+    addRow('', rowNum, '', `A-${String(dayNum).padStart(3,'0')}`, 'Wechselgeld Entnahme (Privatentnahme)', `<span class="tag t-we">WG−</span>`, '1800', null, 100);
+    dayAus += 100; sumWGaus += 100;
+    
+    // Ruhetag note
+    rowNum++;
+    addRow('closed', '', '', '', `— ${day.note} —`, `<span class="tag t-ru">Ruhe</span>`, '', null, null);
+    
+    addSubtotal(dayNum, dayEin, dayAus);
+    return;
+  }
+  
+  // 1) Wechselgeld Einlage
+  rowNum++;
+  addRow('', rowNum, dd, `E-${String(dayNum).padStart(3,'0')}`, 'Wechselgeld Einlage (Privateinlage)', `<span class="tag t-wg">WG+</span>`, '1890', 100, null);
+  dayEin += 100; sumWGein += 100;
+  
+  // 2) Z-Bericht BAR 7%
+  if (day.bar7) {
+    rowNum++;
+    addRow('', rowNum, '', `Z-${String(dayNum).padStart(3,'0')}`, `Tageseinnahme Bar lt. Z-Bericht Nr. ${String(dayNum).padStart(3,'0')} (7% USt)`, `<span class="tag t-u7">7%</span>`, '8100', day.bar7, null);
+    dayEin += day.bar7; sumBar7 += day.bar7;
+  }
+  
+  // 3) Z-Bericht BAR 19%
+  if (day.bar19) {
+    rowNum++;
+    addRow('', rowNum, '', `Z-${String(dayNum).padStart(3,'0')}`, `Tageseinnahme Bar lt. Z-Bericht Nr. ${String(dayNum).padStart(3,'0')} (19% USt)`, `<span class="tag t-u19">19%</span>`, '8300', day.bar19, null);
+    dayEin += day.bar19; sumBar19 += day.bar19;
+  }
+  
+  // 4) Gutschein
+  if (day.gs) {
+    rowNum++;
+    addRow('', rowNum, '', `Z-${String(dayNum).padStart(3,'0')}`, `Gutschein-Verkauf lt. Z-Bericht (0% USt — Anzahlung)`, `<span class="tag t-gs">GS</span>`, '1590', day.gs, null);
+    dayEin += day.gs; sumGS += day.gs;
+  }
+  
+  // 5) Purchases
+  if (day.purchases) {
+    day.purchases.forEach((p, pi) => {
+      rowNum++;
+      const bNr = `K-${String(rowNum).padStart(3,'0')}`;
+      let typTag = '';
+      if (p.konto === '3300') typTag = `<span class="tag t-wr7">Ware7</span>`;
+      else if (p.konto === '3400') typTag = `<span class="tag t-wr19">Ware19</span>`;
+      else if (p.konto === '4930') typTag = `<span class="tag t-so">Büro</span>`;
+      else if (p.konto === '4980') typTag = `<span class="tag t-so">Sonst</span>`;
+      
+      addRow('', rowNum, '', bNr, p.text, typTag, p.konto, null, p.amount);
+      dayAus += p.amount;
+      
+      if (p.konto === '4930' || p.konto === '4980') sumSonstig += p.amount;
+      else sumWare += p.amount;
+    });
+  }
+  
+  // 6) Wechselgeld Entnahme
+  rowNum++;
+  addRow('', rowNum, '', `A-${String(dayNum).padStart(3,'0')}`, 'Wechselgeld Entnahme (Privatentnahme)', `<span class="tag t-we">WG−</span>`, '1800', null, 100);
+  dayAus += 100; sumWGaus += 100;
+  
+  // 7) Bankeinzahlung
+  if (day.bankEinz) {
+    rowNum++;
+    addRow('', rowNum, '', `T-${String(dayNum).padStart(3,'0')}`, `Bareinzahlung auf Bankkonto`, `<span class="tag t-bk">Bank</span>`, '1360', null, day.bankEinz);
+    dayAus += day.bankEinz; sumBank += day.bankEinz;
+  }
+  
+  // Monatsende: alles zur Bank
+  if (day.bankEinzAll && saldo - dayAus + dayEin > 0) {
+    // Calculate remaining after all above
+    const remaining = saldo; // saldo is already updated
+    if (remaining > 0) {
+      rowNum++;
+      addRow('', rowNum, '', `T-${String(dayNum).padStart(3,'0')}`, `Bareinzahlung auf Bankkonto (Monatsabschluss)`, `<span class="tag t-bk">Bank</span>`, '1360', null, remaining);
+      dayAus += remaining; sumBank += remaining;
+    }
+  }
+  
+  addSubtotal(dayNum, dayEin, dayAus);
+});
+
+// ═══════════════════════════════════════════
+// SUMMARY
+// ═══════════════════════════════════════════
+const summaryDiv = document.getElementById('summary');
+const cards = [
+  { label: 'Gesamteinnahmen', val: fmt(totalEin), color: 'var(--green)' },
+  { label: 'Gesamtausgaben', val: fmt(totalAus), color: 'var(--red)' },
+  { label: 'Endbestand Kasse', val: fmt(saldo), color: 'var(--accent)' },
+  { label: 'Bar-Umsatz 7%', val: fmt(sumBar7), color: 'var(--green)' },
+  { label: 'Bar-Umsatz 19%', val: fmt(sumBar19), color: 'var(--orange)' },
+  { label: 'Gutschein-Verkäufe', val: fmt(sumGS), color: 'var(--purple)' },
+  { label: 'Wareneinkauf Bar', val: fmt(sumWare), color: 'var(--yellow)' },
+  { label: 'Sonstige Ausgaben', val: fmt(sumSonstig), color: 'var(--orange)' },
+  { label: 'Bankeinzahlungen', val: fmt(sumBank), color: 'var(--accent)' },
+  { label: 'Wechselgeld Einlagen', val: fmt(sumWGein), color: 'var(--green)' },
+  { label: 'Wechselgeld Entnahmen', val: fmt(sumWGaus), color: 'var(--red)' },
+  { label: 'Buchungen Gesamt', val: rowNum, color: 'var(--text)' },
+];
+
+cards.forEach(c => {
+  const div = document.createElement('div');
+  div.className = 's-card';
+  div.innerHTML = `<div class="s-label">${c.label}</div><div class="s-val" style="color:${c.color}">${c.val}</div>`;
+  summaryDiv.appendChild(div);
+});
+
+// ═══════════════════════════════════════════
+// DATEV EXPORT — Buchungsstapel Format
+// ═══════════════════════════════════════════
+
+// Collect all bookings during render for export
+const allBookings = [];
+
+// Re-process days to collect structured booking data
+(function collectBookings() {
+  days.forEach((day, i) => {
+    const dayNum = i + 1;
+    const dd = String(dayNum).padStart(2,'0') + '01'; // DDMM for DATEV Belegdatum
+
+    if (day.closed) {
+      // Wechselgeld ein
+      allBookings.push({
+        umsatz: 100, sh: 'S', konto: 1000, gegenkonto: 1890,
+        buKey: 40, datum: dd,
+        beleg: `E-${String(dayNum).padStart(3,'0')}`,
+        text: 'Wechselgeld Einlage'
+      });
+      // Wechselgeld aus
+      allBookings.push({
+        umsatz: 100, sh: 'S', konto: 1800, gegenkonto: 1000,
+        buKey: 40, datum: dd,
+        beleg: `A-${String(dayNum).padStart(3,'0')}`,
+        text: 'Wechselgeld Entnahme'
+      });
+      return;
+    }
+
+    // 1) Wechselgeld Einlage
+    allBookings.push({
+      umsatz: 100, sh: 'S', konto: 1000, gegenkonto: 1890,
+      buKey: 40, datum: dd,
+      beleg: `E-${String(dayNum).padStart(3,'0')}`,
+      text: 'Wechselgeld Einlage'
+    });
+
+    // 2) Z-Bericht 7%
+    if (day.bar7) {
+      allBookings.push({
+        umsatz: day.bar7, sh: 'S', konto: 1000, gegenkonto: 8100,
+        buKey: 2, datum: dd,
+        beleg: `Z-${String(dayNum).padStart(3,'0')}`,
+        text: 'Tageseinnahme Bar 7% lt. Z-Bericht'
+      });
+    }
+
+    // 3) Z-Bericht 19%
+    if (day.bar19) {
+      allBookings.push({
+        umsatz: day.bar19, sh: 'S', konto: 1000, gegenkonto: 8300,
+        buKey: 3, datum: dd,
+        beleg: `Z-${String(dayNum).padStart(3,'0')}`,
+        text: 'Tageseinnahme Bar 19% lt. Z-Bericht'
+      });
+    }
+
+    // 4) Gutschein
+    if (day.gs) {
+      allBookings.push({
+        umsatz: day.gs, sh: 'S', konto: 1000, gegenkonto: 1590,
+        buKey: 40, datum: dd,
+        beleg: `Z-${String(dayNum).padStart(3,'0')}`,
+        text: 'Gutschein-Verkauf 0% USt'
+      });
+    }
+
+    // 5) Purchases
+    if (day.purchases) {
+      let pIdx = 0;
+      day.purchases.forEach(p => {
+        pIdx++;
+        let buKey = 40;
+        if (p.konto === '3300') buKey = 8;  // 7% Vorsteuer
+        else if (p.konto === '3400') buKey = 9; // 19% Vorsteuer
+        // 4930, 4980 → 9 (19% VSt)
+        else if (p.konto === '4930' || p.konto === '4980') buKey = 9;
+
+        allBookings.push({
+          umsatz: p.amount, sh: 'S', konto: parseInt(p.konto), gegenkonto: 1000,
+          buKey: buKey, datum: dd,
+          beleg: `K-${String(dayNum).padStart(2,'0')}${pIdx}`,
+          text: p.text.substring(0, 60)
+        });
+      });
+    }
+
+    // 6) Wechselgeld Entnahme
+    allBookings.push({
+      umsatz: 100, sh: 'S', konto: 1800, gegenkonto: 1000,
+      buKey: 40, datum: dd,
+      beleg: `A-${String(dayNum).padStart(3,'0')}`,
+      text: 'Wechselgeld Entnahme'
+    });
+
+    // 7) Bankeinzahlung
+    if (day.bankEinz) {
+      allBookings.push({
+        umsatz: day.bankEinz, sh: 'S', konto: 1360, gegenkonto: 1000,
+        buKey: 40, datum: dd,
+        beleg: `T-${String(dayNum).padStart(3,'0')}`,
+        text: 'Bareinzahlung auf Bankkonto'
+      });
+    }
+
+    // Monatsende: full bank deposit
+    if (day.bankEinzAll) {
+      // Calculate the remaining saldo at this point
+      let tempSaldo = 0;
+      allBookings.forEach(b => {
+        if (b.konto === 1000) tempSaldo += b.umsatz;
+        if (b.gegenkonto === 1000) tempSaldo -= b.umsatz;
+      });
+      if (tempSaldo > 0.01) {
+        allBookings.push({
+          umsatz: Math.round(tempSaldo * 100) / 100,
+          sh: 'S', konto: 1360, gegenkonto: 1000,
+          buKey: 40, datum: dd,
+          beleg: `T-${String(dayNum).padStart(3,'0')}`,
+          text: 'Bareinzahlung Monatsabschluss'
+        });
+      }
+    }
+  });
+})();
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function downloadFile(filename, content, mime) {
+  const blob = new Blob(['\uFEFF' + content], { type: mime + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function fmtDATEV(n) {
+  // DATEV uses comma as decimal separator, no thousands separator
+  return n.toFixed(2).replace('.', ',');
+}
+
+// ═══════════════════════════════════════════
+// DATEV Buchungsstapel CSV Export
+// Format: DATEV Format v12.0
+// ═══════════════════════════════════════════
+function exportDATEV() {
+  const lines = [];
+
+  // ── HEADER ROW 1 (Formatinfo) ──
+  // DATEV Header line 1: fixed format identifiers
+  // Fields: "EXTF";700;21;"Buchungsstapel";12;...
+  const header1 = [
+    '"EXTF"',   // 1: Kennzeichen (EXTF = externes Format)
+    '700',      // 2: Versionsnummer
+    '21',       // 3: Datenkategorie (21 = Buchungsstapel)
+    '"Buchungsstapel"', // 4: Formatname
+    '12',       // 5: Formatversion
+    '',         // 6: Erzeugt am (leer = aktuell)
+    '',         // 7: Importiert am
+    '"KB"',     // 8: Herkunft (Kürzel)
+    '""',       // 9: Exportiert von
+    '""',       // 10: Importiert von
+    '99999',    // 11: Berater-Nr ← ANPASSEN!
+    '10001',    // 12: Mandanten-Nr ← ANPASSEN!
+    '20250101', // 13: WJ-Beginn (Wirtschaftsjahr)
+    '4',        // 14: Sachkontenlänge
+    '20250101', // 15: Datum von
+    '20250130', // 16: Datum bis
+    '""',       // 17: Bezeichnung
+    '""',       // 18: Diktatkürzel
+    '1',        // 19: Buchungstyp (1 = Fibu)
+    '0',        // 20: Rechnungslegungszweck
+    '0',        // 21: Festschreibung (0 = nicht festgeschrieben)
+    '"EUR"',    // 22: WKZ (Währungskennzeichen)
+    '',         // 23-26: Reserved
+    '', '', ''
+  ];
+  lines.push(header1.join(';'));
+
+  // ── HEADER ROW 2 (Column names) ──
+  const colNames = [
+    'Umsatz (ohne Soll/Haben-Kz)',  // 1
+    'Soll/Haben-Kennzeichen',        // 2
+    'WKZ Umsatz',                     // 3
+    'Kurs',                           // 4
+    'Basis-Umsatz',                   // 5
+    'WKZ Basis-Umsatz',              // 6
+    'Konto',                          // 7
+    'Gegenkonto (ohne BU-Schlüssel)', // 8
+    'BU-Schlüssel',                   // 9
+    'Belegdatum',                     // 10
+    'Belegfeld 1',                    // 11
+    'Belegfeld 2',                    // 12
+    'Skonto',                         // 13
+    'Buchungstext',                   // 14
+    'Postensperre',                   // 15
+    'Diverse Adressnummer',          // 16
+    'Geschäftspartnerbank',          // 17
+    'Sachverhalt',                    // 18
+    'Zinssperre',                     // 19
+    'Beleglink',                      // 20
+    'Beleginfo - Art 1',             // 21
+    'Beleginfo - Inhalt 1',          // 22
+    'Beleginfo - Art 2',             // 23
+    'Beleginfo - Inhalt 2',          // 24
+    'Beleginfo - Art 3',             // 25
+    'Beleginfo - Inhalt 3',          // 26
+    'Beleginfo - Art 4',             // 27
+    'Beleginfo - Inhalt 4',          // 28
+    'Beleginfo - Art 5',             // 29
+    'Beleginfo - Inhalt 5',          // 30
+    'Beleginfo - Art 6',             // 31
+    'Beleginfo - Inhalt 6',          // 32
+    'Beleginfo - Art 7',             // 33
+    'Beleginfo - Inhalt 7',          // 34
+    'Beleginfo - Art 8',             // 35
+    'Beleginfo - Inhalt 8',          // 36
+    'KOST1 - Kostenstelle',          // 37
+    'KOST2 - Kostenstelle',          // 38
+    'Kost-Menge',                     // 39
+    'EU-Land u. UStID',              // 40
+    'EU-Steuersatz',                  // 41
+    'Abw. Versteuerungsart',         // 42
+    'Sachverhalt L+L',               // 43
+    'Funktionsergänzung L+L',        // 44
+    'BU 49 Hauptfunktionstyp',       // 45
+    'BU 49 Hauptfunktionsnummer',    // 46
+    'BU 49 Funktionsergänzung',      // 47
+    'Zusatzinformation - Art 1',     // 48
+    'Zusatzinformation - Inhalt 1',  // 49
+    'Zusatzinformation - Art 2',     // 50
+    'Zusatzinformation - Inhalt 2',  // 51
+    'Zusatzinformation - Art 3',     // 52
+    'Zusatzinformation - Inhalt 3',  // 53
+    'Zusatzinformation - Art 4',     // 54
+    'Zusatzinformation - Inhalt 4',  // 55
+    'Zusatzinformation - Art 5',     // 56
+    'Zusatzinformation - Inhalt 5',  // 57
+    'Zusatzinformation - Art 6',     // 58
+    'Zusatzinformation - Inhalt 6',  // 59
+    'Zusatzinformation - Art 7',     // 60
+    'Zusatzinformation - Inhalt 7',  // 61
+    'Zusatzinformation - Art 8',     // 62
+    'Zusatzinformation - Inhalt 8',  // 63
+    'Zusatzinformation - Art 9',     // 64
+    'Zusatzinformation - Inhalt 9',  // 65
+    'Zusatzinformation - Art 10',    // 66
+    'Zusatzinformation - Inhalt 10', // 67
+    'Zusatzinformation - Art 11',    // 68
+    'Zusatzinformation - Inhalt 11', // 69
+    'Zusatzinformation - Art 12',    // 70
+    'Zusatzinformation - Inhalt 12', // 71
+    'Zusatzinformation - Art 13',    // 72
+    'Zusatzinformation - Inhalt 13', // 73
+    'Zusatzinformation - Art 14',    // 74
+    'Zusatzinformation - Inhalt 14', // 75
+    'Zusatzinformation - Art 15',    // 76
+    'Zusatzinformation - Inhalt 15', // 77
+    'Zusatzinformation - Art 16',    // 78
+    'Zusatzinformation - Inhalt 16', // 79
+    'Zusatzinformation - Art 17',    // 80
+    'Zusatzinformation - Inhalt 17', // 81
+    'Zusatzinformation - Art 18',    // 82
+    'Zusatzinformation - Inhalt 18', // 83
+    'Zusatzinformation - Art 19',    // 84
+    'Zusatzinformation - Inhalt 19', // 85
+    'Zusatzinformation - Art 20',    // 86
+    'Zusatzinformation - Inhalt 20', // 87
+    'Stück',                          // 88
+    'Gewicht',                        // 89
+    'Zahlweise',                      // 90
+    'Forderungsart',                  // 91
+    'Veranlagungsjahr',              // 92
+    'Zugeordnete Fälligkeit',        // 93
+    'Skontotyp',                      // 94
+    'Auftragsnummer',                // 95
+    'Buchungstyp',                    // 96
+    'USt-Schlüssel (Anzahlungen)',   // 97
+    'EU-Land (Anzahlungen)',         // 98
+    'Sachverhalt L+L (Anzahlungen)', // 99
+    'EU-Steuersatz (Anzahlungen)',   // 100
+    'Erlöskonto (Anzahlungen)',      // 101
+    'Herkunft-Kz',                    // 102
+    'Buchungs GUID',                  // 103
+    'KOST-Datum',                     // 104
+    'SEPA-Mandatsreferenz',          // 105
+    'Skontosperre',                   // 106
+    'Gesellschaftername',            // 107
+    'Beteiligtennummer',             // 108
+    'Identifikationsnummer',         // 109
+    'Zeichnernummer',                // 110
+    'Postensperre bis',              // 111
+    'Bezeichnung SoBil-Sachverhalt', // 112
+    'Kennzeichen SoBil-Buchung',     // 113
+    'Festschreibung',                // 114
+    'Leistungsdatum',                // 115
+    'Datum Zuord. Steuerperiode',    // 116
+    'Fälligkeit',                     // 117
+    'Generalumkehr (GU)',            // 118
+    'Steuersatz',                     // 119
+    'Land'                            // 120
+  ];
+  lines.push(colNames.join(';'));
+
+  // ── DATA ROWS ──
+  allBookings.forEach(b => {
+    const row = new Array(120).fill('');
+
+    row[0] = fmtDATEV(b.umsatz);           // 1: Umsatz
+    row[1] = b.sh;                           // 2: Soll/Haben-Kz
+    row[2] = 'EUR';                          // 3: WKZ
+    row[3] = '';                              // 4: Kurs
+    row[4] = '';                              // 5: Basis-Umsatz
+    row[5] = '';                              // 6: WKZ Basis
+    row[6] = b.konto;                        // 7: Konto
+    row[7] = b.gegenkonto;                   // 8: Gegenkonto
+    row[8] = b.buKey;                        // 9: BU-Schlüssel
+    row[9] = b.datum;                        // 10: Belegdatum (DDMM)
+    row[10] = '"' + b.beleg + '"';           // 11: Belegfeld 1
+    row[11] = '';                             // 12: Belegfeld 2
+    row[12] = '';                             // 13: Skonto
+    row[13] = '"' + b.text.replace(/"/g, '""') + '"'; // 14: Buchungstext
+
+    lines.push(row.join(';'));
+  });
+
+  const csv = lines.join('\r\n');
+  downloadFile(
+    'EXTF_Buchungsstapel_Kasse_202501.csv',
+    csv,
+    'text/csv'
+  );
+  showToast('DATEV Buchungsstapel heruntergeladen! (' + allBookings.length + ' Buchungen)');
+}
+
+// ═══════════════════════════════════════════
+// Simple Kassenbuch CSV Export
+// ═══════════════════════════════════════════
+function exportSimpleCSV() {
+  const lines = [];
+  lines.push([
+    'Nr', 'Datum', 'Beleg-Nr', 'Buchungstext',
+    'Gegenkonto', 'BU-Schlüssel',
+    'Einnahme', 'Ausgabe', 'Saldo'
+  ].join(';'));
+
+  let csvSaldo = 0;
+  let csvNr = 0;
+
+  allBookings.forEach(b => {
+    csvNr++;
+    const isEinnahme = (b.konto === 1000);
+    const einnahme = isEinnahme ? b.umsatz : 0;
+    const ausgabe = isEinnahme ? 0 : b.umsatz;
+
+    csvSaldo += einnahme - ausgabe;
+
+    lines.push([
+      csvNr,
+      b.datum.substring(0,2) + '.01.2025',
+      '"' + b.beleg + '"',
+      '"' + b.text.replace(/"/g, '""') + '"',
+      isEinnahme ? b.gegenkonto : b.konto,
+      b.buKey,
+      fmtDATEV(einnahme),
+      fmtDATEV(ausgabe),
+      fmtDATEV(Math.round(csvSaldo * 100) / 100)
+    ].join(';'));
+  });
+
+  const csv = lines.join('\r\n');
+  downloadFile(
+    'Kassenbuch_202501.csv',
+    csv,
+    'text/csv'
+  );
+  showToast('Kassenbuch CSV heruntergeladen! (' + csvNr + ' Zeilen)');
+}
+</script>
+</body>
+</html>

@@ -20,4 +20,4 @@ expect fun PlatformShareButton(
 )
 
 @Composable
-expect fun PlatformInfoContent(modifier: Modifier)
+expect fun PlatformInfoContent(modifier: Modifier, language: String = "de")

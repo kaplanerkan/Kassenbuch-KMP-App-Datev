@@ -7,14 +7,24 @@ import de.panda.kassenbuch.data.entity.BuchungsArt
 import de.panda.kassenbuch.data.repository.KassenbuchRepository
 import de.panda.kassenbuch.util.currentDate
 import de.panda.kassenbuch.util.currentTime
+import de.panda.kassenbuch.util.minusDays
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.minus
+
+enum class FilterPeriod(val labelKey: String) {
+    TAG("filter_today"),
+    WOCHE("filter_week"),
+    MONAT("filter_month"),
+    JAHR("filter_year")
+}
 
 data class BookingFormState(
     val id: Long = 0,
@@ -38,6 +48,7 @@ data class BookingFormState(
 data class BookingListState(
     val buchungen: List<Buchung> = emptyList(),
     val filterDatum: LocalDate = currentDate(),
+    val filterPeriod: FilterPeriod = FilterPeriod.TAG,
     val isLoading: Boolean = true
 )
 
@@ -54,17 +65,30 @@ class BookingScreenModel(
     private var listJob: Job? = null
 
     init {
-        loadBuchungenForToday()
+        loadBuchungenForPeriod(FilterPeriod.TAG)
     }
 
-    fun loadBuchungenForToday() {
-        loadBuchungenForDate(currentDate())
+    fun loadBuchungenForPeriod(period: FilterPeriod) {
+        listJob?.cancel()
+        val heute = currentDate()
+        listJob = viewModelScope.launch {
+            _listState.update { it.copy(filterPeriod = period, filterDatum = heute, isLoading = true) }
+            val von = when (period) {
+                FilterPeriod.TAG -> heute
+                FilterPeriod.WOCHE -> heute.minusDays(6)
+                FilterPeriod.MONAT -> heute.minus(1, DateTimeUnit.MONTH)
+                FilterPeriod.JAHR -> heute.minus(1, DateTimeUnit.YEAR)
+            }
+            repository.buchungenFuerZeitraumFlow(von, heute).collect { buchungen ->
+                _listState.update { it.copy(buchungen = buchungen, isLoading = false) }
+            }
+        }
     }
 
     fun loadBuchungenForDate(datum: LocalDate) {
         listJob?.cancel()
         listJob = viewModelScope.launch {
-            _listState.update { it.copy(filterDatum = datum, isLoading = true) }
+            _listState.update { it.copy(filterDatum = datum, filterPeriod = FilterPeriod.TAG, isLoading = true) }
             repository.buchungenFuerTagFlow(datum).collect { buchungen ->
                 _listState.update { it.copy(buchungen = buchungen, isLoading = false) }
             }

@@ -62,15 +62,16 @@ actual fun PlatformShareButton(
 }
 
 @Composable
-actual fun PlatformInfoContent(modifier: Modifier) {
+actual fun PlatformInfoContent(modifier: Modifier, language: String) {
     Column(modifier = modifier.padding(16.dp)) {
         Text(
-            "Kassenbuch Anleitung",
+            if (language == "tr") "Kassenbuch Kullanım Kılavuzu" else "Kassenbuch Anleitung",
             style = MaterialTheme.typography.headlineSmall
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            "Die Anleitung ist in der App integriert.",
+            if (language == "tr") "Kılavuz henüz iOS için hazır değil."
+            else "Die Anleitung ist für iOS noch nicht verfügbar.",
             style = MaterialTheme.typography.bodyMedium
         )
         // TODO: WKWebView integration for iOS

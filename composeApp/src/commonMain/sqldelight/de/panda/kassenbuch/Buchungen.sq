@@ -101,5 +101,8 @@ SELECT COUNT(*) + 1 FROM buchungen WHERE datum = ?;
 alleTagesMitBuchungen:
 SELECT DISTINCT datum FROM buchungen ORDER BY datum DESC;
 
+gesamtAnzahl:
+SELECT COUNT(*) FROM buchungen;
+
 lastInsertId:
 SELECT last_insert_rowid();

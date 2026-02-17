@@ -3,6 +3,8 @@
 > Digitales Kassenbuch als Kotlin Multiplatform App für Döner-Imbisse, Restaurants und kleine Gastronomiebetriebe.
 > GoBD-konform · DATEV-Export · Material 3 Design · Offline-fähig · Android, Desktop & iOS
 
+[Türkçe sürüm / Turkish version](README_TR.md)
+
 ---
 
 ## Was ist das?
@@ -28,11 +30,14 @@ Eine plattformübergreifende App zum Führen eines digitalen Kassenbuchs nach de
 | **Belegfotos** | Belege direkt fotografieren und zur Buchung speichern |
 | **Münzzähler** | Schein- und Münzzähler für den Kassensturz |
 | **Tagesabschluss** | Vortrag, Einnahmen, Ausgaben, Endbestand und Kassendifferenz |
+| **Zeitraum-Filter** | Tages-, Wochen-, Monats- und Jahresansicht für Buchungen und Tagesabschluss |
 | **DATEV-Export** | Buchungsstapel im DATEV-Format (EXTF v12.0) für den Steuerberater |
 | **CSV-Export** | Kassenbuch als CSV für Excel / Google Sheets |
+| **Datenbank-Backup** | Datenbank als ZIP sichern und wiederherstellen |
 | **Einstellungen** | Betriebsdaten, DATEV Berater-/Mandanten-Nr., Wechselgeld-Standard |
 | **Dark/Light Theme** | Material 3 mit automatischem Dark Mode |
 | **Responsive Layout** | NavigationBar (Telefon) / NavigationRail (Tablet/Desktop) |
+| **Mehrsprachige Anleitung** | Anleitung in Deutsch und Türkisch wählbar |
 
 ---
 
@@ -57,7 +62,7 @@ Nach dem Start der App wird das **Dashboard** angezeigt. Hier sieht der Benutzer
 
 ### Buchungen
 
-Im Tab **Buchungen** werden alle Einnahmen und Ausgaben des gewählten Tages aufgelistet. Über das Kalender-Symbol in der oberen Leiste kann ein anderer Tag ausgewählt werden.
+Im Tab **Buchungen** werden alle Einnahmen und Ausgaben aufgelistet. Über die Filter-Chips kann zwischen Tages-, Wochen-, Monats- und Jahresansicht gewechselt werden. Über das Kalender-Symbol in der oberen Leiste kann ein anderer Tag ausgewählt werden.
 
 **Neue Buchung anlegen:**
 1. Auf den **+**-Button (unten rechts) tippen.
@@ -84,15 +89,15 @@ Im Tab **Buchungen** werden alle Einnahmen und Ausgaben des gewählten Tages auf
 
 ### Tagesabschluss
 
-Im Tab **Tagesabschluss** wird die tägliche Kassenabrechnung durchgeführt. Der Benutzer sieht:
+Im Tab **Tagesabschluss** wird die tägliche Kassenabrechnung durchgeführt. Über die Filter-Chips kann zwischen Tages-, Wochen-, Monats- und Jahresansicht gewechselt werden. Der Benutzer sieht:
 
 - **Vortrag**: Der Kassenbestand vom Vortag (Übertrag).
-- **Einnahmen**: Alle Einnahmen des Tages.
-- **Ausgaben**: Alle Ausgaben des Tages.
+- **Einnahmen**: Alle Einnahmen des gewählten Zeitraums.
+- **Ausgaben**: Alle Ausgaben des gewählten Zeitraums.
 - **Soll-Endbestand**: Der rechnerische Kassenbestand (Vortrag + Einnahmen − Ausgaben).
 
-**Kassensturz durchführen:**
-1. Das Bargeld in der Kasse zählen. Dafür kann der integrierte **Münzzähler** verwendet werden (erreichbar über das Dashboard oder die Navigation).
+**Kassensturz durchführen (nur Tagesansicht):**
+1. Das Bargeld in der Kasse zählen. Dafür kann der integrierte **Münzzähler** verwendet werden.
 2. Den **gezählten Betrag** in das Feld „Gezählter Bestand" eingeben.
 3. Die App zeigt automatisch die **Differenz** zwischen Soll-Bestand und gezähltem Bestand an.
 4. Mit **Tagesabschluss durchführen** den Tag abschließen.
@@ -102,7 +107,6 @@ Im Tab **Tagesabschluss** wird die tägliche Kassenabrechnung durchgeführt. Der
 - Eine Differenz von wenigen Cent ist bei Barzahlungsgeschäften normal (Rundungsdifferenzen).
 - Größere Differenzen (ab ca. 5 €) deuten auf fehlende oder falsche Buchungen hin und sollten sofort geklärt werden.
 - Ein abgeschlossener Tag wird mit einem grünen Häkchen markiert und kann nicht erneut abgeschlossen werden.
-- Das Kalender-Symbol in der oberen Leiste ermöglicht den Wechsel zu einem anderen Tag, um vergangene Abschlüsse einzusehen.
 
 ---
 
@@ -113,7 +117,6 @@ Im Tab **Export** können die Buchungen für den Steuerberater exportiert werden
 **DATEV-Export (EXTF v12.0):**
 - Erzeugt eine CSV-Datei im offiziellen DATEV-Buchungsstapelformat, die vom Steuerberater direkt in DATEV importiert werden kann.
 - Enthält: Umsatz, Soll/Haben, Konto, Gegenkonto, BU-Schlüssel, Belegdatum, Buchungstext und Belegfeld.
-- Format entspricht der DATEV-Schnittstelle EXTF Version 12.0.
 
 **Einfacher CSV-Export:**
 - Erzeugt eine übersichtliche CSV-Tabelle mit Datum, Uhrzeit, Buchungsart, Betrag, Buchungstext und Beleg-Nr.
@@ -128,8 +131,23 @@ Im Tab **Export** können die Buchungen für den Steuerberater exportiert werden
 **Worauf ist zu achten?**
 - Vor dem ersten DATEV-Export müssen in den **Einstellungen** die Berater-Nr. und Mandanten-Nr. eingetragen werden. Diese Nummern erhält man vom Steuerberater.
 - Der Export sollte in der Regel **monatlich** zum Monatsende erfolgen.
-- Die exportierte Datei enthält alle Buchungen des gewählten Zeitraums — keine Buchung wird ausgelassen.
-- Es empfiehlt sich, die exportierte Datei zusätzlich als Sicherungskopie abzuspeichern.
+
+---
+
+### Datenbank
+
+Im Tab **Datenbank** können Sicherungskopien (Backups) der gesamten Datenbank erstellt und wiederhergestellt werden:
+
+- **Backup erstellen**: Erstellt eine ZIP-Datei der Datenbank unter `logs/kassenbuch/backup/kassenbuch_YYYY_MM_DD_HH_mm.zip`.
+- **Wiederherstellen**: Stellt die Datenbank aus einer vorhandenen ZIP-Datei wieder her.
+
+**Wichtig:** Nach einer Wiederherstellung muss die App neu gestartet werden!
+
+---
+
+### Info
+
+Im Tab **Info** kann die ausführliche Kassenbuch-Anleitung aufgerufen werden. Über die Filter-Chips **Deutsch** / **Türkçe** in der oberen Leiste kann die Sprache gewählt werden.
 
 ---
 
@@ -174,16 +192,17 @@ composeApp/src/
 │   ├── di/CommonModule.kt             # Gemeinsames Koin-Modul
 │   ├── ui/
 │   │   ├── theme/                     # Material 3 Theme (Dark/Light)
-│   │   ├── components/                # AdaptiveLayout, WindowSizeClass
+│   │   ├── components/                # AdaptiveLayout, WindowSizeClass, StatusPopup
 │   │   └── screens/
 │   │       ├── dashboard/             # Dashboard + ScreenModel
 │   │       ├── booking/               # Buchungsformular + Liste
 │   │       ├── daily/                 # Tagesabschluss + Münzzähler
 │   │       ├── export/                # DATEV + CSV Export
+│   │       ├── database/              # Datenbank Backup / Wiederherstellen
 │   │       ├── settings/              # Einstellungen
-│   │       └── info/                  # Plattformspezifische Info
+│   │       └── info/                  # Plattformspezifische Info (DE/TR)
 │   ├── platform/                      # expect-Deklarationen
-│   └── util/                          # Formatter, DatevExporter, PrefsManager
+│   └── util/                          # Formatter, DatevExporter, PrefsManager, SeedData
 ├── androidMain/                       # Android-spezifisch (Activity, Kamera, SQLite-Treiber)
 ├── desktopMain/                       # Desktop-spezifisch (JVM Window, SQLite-Treiber)
 └── iosMain/                           # iOS-spezifisch (UIViewController, SQLite-Treiber)

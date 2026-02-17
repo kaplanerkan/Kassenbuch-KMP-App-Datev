@@ -85,25 +85,68 @@ actual fun PlatformShareButton(
 }
 
 @Composable
-actual fun PlatformInfoContent(modifier: Modifier) {
+actual fun PlatformInfoContent(modifier: Modifier, language: String) {
+    val htmlFiles = listOf("anleitung_de.html", "anleitung_tr.html", "kassenbuch-voll.html")
+    var tempDir by remember { mutableStateOf<File?>(null) }
+
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            val dir = File(System.getProperty("java.io.tmpdir"), "kassenbuch-anleitung")
+            if (!dir.exists()) dir.mkdirs()
+
+            htmlFiles.forEach { name ->
+                val resource = Thread.currentThread().contextClassLoader
+                    .getResourceAsStream("html/$name")
+                resource?.use { input ->
+                    File(dir, name).outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            }
+            tempDir = dir
+        }
+    }
+
+    val anleitungFile = if (language == "tr") "anleitung_tr.html" else "anleitung_de.html"
+
     Column(modifier = modifier.padding(16.dp)) {
         Text(
-            "Kassenbuch Anleitung",
+            if (language == "tr") "Kassenbuch Kullanım Kılavuzu" else "Kassenbuch Anleitung",
             style = MaterialTheme.typography.headlineSmall
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(12.dp))
         Text(
-            "Die Anleitung wird im Desktop-Browser geöffnet.",
-            style = MaterialTheme.typography.bodyMedium
+            if (language == "tr") "Kılavuz ve örnek Kassenbuch tarayıcıda açılır."
+            else "Die Anleitung und das Kassenbuch-Beispiel werden im Browser geöffnet.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = {
-            try {
-                val uri = java.net.URI("https://kassenbuch.de/anleitung")
-                Desktop.getDesktop().browse(uri)
-            } catch (_: Exception) { }
-        }) {
-            Text("Anleitung öffnen")
+        Spacer(Modifier.height(16.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Button(
+                onClick = {
+                    tempDir?.let {
+                        try {
+                            Desktop.getDesktop().browse(File(it, anleitungFile).toURI())
+                        } catch (_: Exception) { }
+                    }
+                },
+                enabled = tempDir != null
+            ) {
+                Text(if (language == "tr") "Kılavuzu aç" else "Anleitung öffnen")
+            }
+            OutlinedButton(
+                onClick = {
+                    tempDir?.let {
+                        try {
+                            Desktop.getDesktop().browse(File(it, "kassenbuch-voll.html").toURI())
+                        } catch (_: Exception) { }
+                    }
+                },
+                enabled = tempDir != null
+            ) {
+                Text(if (language == "tr") "Örnek Kassenbuch" else "Kassenbuch-Beispiel")
+            }
         }
     }
 }

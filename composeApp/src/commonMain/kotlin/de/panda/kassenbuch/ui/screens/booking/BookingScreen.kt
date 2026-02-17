@@ -156,9 +156,7 @@ fun BookingListContent(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "${stringResource(Res.string.nav_bookings)} \u2014 ${Formatter.datum(listState.filterDatum)}"
-                    )
+                    Text(stringResource(Res.string.nav_bookings))
                 },
                 actions = {
                     IconButton(onClick = { showDatePicker = true }) {
@@ -176,62 +174,92 @@ fun BookingListContent(
             }
         }
     ) { padding ->
-        if (listState.buchungen.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(stringResource(Res.string.booking_no_bookings_day))
-            }
-        } else {
-            LazyColumn(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Filter Chips
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 16.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(listState.buchungen, key = { it.id }) { buchung ->
-                    Card(
-                        onClick = { onNavigateToEdit(buchung.id) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                if (buchung.istEinnahme) Icons.Filled.ArrowDownward
-                                else Icons.Filled.ArrowUpward,
-                                contentDescription = null,
-                                tint = if (buchung.istEinnahme) Einnahme else Ausgabe
-                            )
-                            Spacer(Modifier.width(12.dp))
-                            Column(Modifier.weight(1f)) {
-                                Text(
-                                    buchung.buchungstext,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Text(
-                                    "${Formatter.uhrzeit(buchung.uhrzeit)} \u00b7 ${buchung.belegNr} \u00b7 ${Formatter.kontoLabel(buchung.gegenkonto)}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                FilterPeriod.entries.forEach { period ->
+                    FilterChip(
+                        selected = listState.filterPeriod == period,
+                        onClick = { screenModel.loadBuchungenForPeriod(period) },
+                        label = {
                             Text(
-                                "${if (buchung.istEinnahme) "+" else "\u2212"}${Formatter.euro(buchung.betrag)}",
-                                fontWeight = FontWeight.Bold,
-                                color = if (buchung.istEinnahme) Einnahme else Ausgabe
+                                when (period) {
+                                    FilterPeriod.TAG -> "Heute"
+                                    FilterPeriod.WOCHE -> "Woche"
+                                    FilterPeriod.MONAT -> "Monat"
+                                    FilterPeriod.JAHR -> "Jahr"
+                                }
                             )
                         }
-                    }
+                    )
                 }
+            }
 
-                // Spacer for FAB
-                item { Spacer(Modifier.height(72.dp)) }
+            if (listState.buchungen.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(stringResource(Res.string.booking_no_bookings_day))
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(listState.buchungen, key = { it.id }) { buchung ->
+                        Card(
+                            onClick = { onNavigateToEdit(buchung.id) },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    if (buchung.istEinnahme) Icons.Filled.ArrowDownward
+                                    else Icons.Filled.ArrowUpward,
+                                    contentDescription = null,
+                                    tint = if (buchung.istEinnahme) Einnahme else Ausgabe
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Column(Modifier.weight(1f)) {
+                                    Text(
+                                        buchung.buchungstext,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Text(
+                                        "${Formatter.datum(buchung.datum)} \u00b7 ${Formatter.uhrzeit(buchung.uhrzeit)} \u00b7 ${buchung.belegNr}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                Text(
+                                    "${if (buchung.istEinnahme) "+" else "\u2212"}${Formatter.euro(buchung.betrag)}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (buchung.istEinnahme) Einnahme else Ausgabe
+                                )
+                            }
+                        }
+                    }
+
+                    // Spacer for FAB
+                    item { Spacer(Modifier.height(72.dp)) }
+                }
             }
         }
     }

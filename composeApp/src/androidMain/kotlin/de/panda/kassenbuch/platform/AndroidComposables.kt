@@ -138,7 +138,13 @@ actual fun PlatformShareButton(
 }
 
 @Composable
-actual fun PlatformInfoContent(modifier: Modifier) {
+actual fun PlatformInfoContent(modifier: Modifier, language: String) {
+    val url = if (language == "tr") {
+        "file:///android_asset/anleitung_tr.html"
+    } else {
+        "file:///android_asset/anleitung_de.html"
+    }
+
     AndroidView(
         modifier = modifier,
         factory = { context ->
@@ -147,8 +153,10 @@ actual fun PlatformInfoContent(modifier: Modifier) {
                 settings.javaScriptEnabled = true
                 settings.loadWithOverviewMode = true
                 settings.useWideViewPort = true
-                loadUrl("file:///android_asset/anleitung.html")
             }
+        },
+        update = { webView ->
+            webView.loadUrl(url)
         }
     )
 }

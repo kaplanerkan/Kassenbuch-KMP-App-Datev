@@ -68,13 +68,32 @@ fun DailyContent() {
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
+            contentPadding = PaddingValues(vertical = 8.dp)
         ) {
+            // Filter chips
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    DailyFilterPeriod.entries.forEach { period ->
+                        FilterChip(
+                            selected = state.filterPeriod == period,
+                            onClick = { screenModel.loadPeriod(period) },
+                            label = { Text(period.label) }
+                        )
+                    }
+                }
+            }
+
             // Date header
             item {
                 Text(
-                    Formatter.datum(state.datum),
-                    style = MaterialTheme.typography.headlineSmall,
+                    if (state.filterPeriod == DailyFilterPeriod.TAG) {
+                        Formatter.datum(state.datum)
+                    } else {
+                        "${Formatter.datum(state.vonDatum)} \u2014 ${Formatter.datum(state.datum)}"
+                    },
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -93,54 +112,56 @@ fun DailyContent() {
                 }
             }
 
-            // Kassensturz
-            item {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(stringResource(Res.string.daily_kassensturz), style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(8.dp))
-                        OutlinedTextField(
-                            value = state.gezaehlterBestand,
-                            onValueChange = { screenModel.updateGezaehlterBestand(it) },
-                            label = { Text(stringResource(Res.string.daily_counted)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            leadingIcon = { Icon(Icons.Filled.Paid, null) }
-                        )
-                        if (state.differenz != null) {
+            // Kassensturz (nur fuer Tagesansicht)
+            if (state.filterPeriod == DailyFilterPeriod.TAG) {
+                item {
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(stringResource(Res.string.daily_kassensturz), style = MaterialTheme.typography.titleMedium)
                             Spacer(Modifier.height(8.dp))
-                            Text(
-                                "${stringResource(Res.string.daily_difference)}: ${Formatter.euro(state.differenz!!)}",
-                                color = if (abs(state.differenz!!) < 0.01) Einnahme else Ausgabe,
-                                fontWeight = FontWeight.Bold
+                            OutlinedTextField(
+                                value = state.gezaehlterBestand,
+                                onValueChange = { screenModel.updateGezaehlterBestand(it) },
+                                label = { Text(stringResource(Res.string.daily_counted)) },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(),
+                                leadingIcon = { Icon(Icons.Filled.Paid, null) }
                             )
+                            if (state.differenz != null) {
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "${stringResource(Res.string.daily_difference)}: ${Formatter.euro(state.differenz!!)}",
+                                    color = if (abs(state.differenz!!) < 0.01) Einnahme else Ausgabe,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            // Close day / already closed
-            item {
-                if (state.istAbgeschlossen) {
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Filled.CheckCircle, null, tint = Einnahme)
-                            Spacer(Modifier.width(8.dp))
-                            Text(stringResource(Res.string.daily_already_closed))
+                // Close day / already closed
+                item {
+                    if (state.istAbgeschlossen) {
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Filled.CheckCircle, null, tint = Einnahme)
+                                Spacer(Modifier.width(8.dp))
+                                Text(stringResource(Res.string.daily_already_closed))
+                            }
                         }
-                    }
-                } else {
-                    Button(
-                        onClick = { screenModel.tagesabschlussDurchfuehren() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(Icons.Filled.Summarize, null)
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(Res.string.daily_close))
+                    } else {
+                        Button(
+                            onClick = { screenModel.tagesabschlussDurchfuehren() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Filled.Summarize, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(Res.string.daily_close))
+                        }
                     }
                 }
             }

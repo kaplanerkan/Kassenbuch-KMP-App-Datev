@@ -15,16 +15,23 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import de.panda.kassenbuch.navigation.*
 import de.panda.kassenbuch.ui.components.*
+import de.panda.kassenbuch.ui.components.LocalStatusPopup
+import de.panda.kassenbuch.ui.components.StatusPopup
+import de.panda.kassenbuch.ui.components.StatusPopupController
 import de.panda.kassenbuch.ui.screens.booking.BookingFormContent
 import de.panda.kassenbuch.ui.screens.booking.BookingListContent
 import de.panda.kassenbuch.ui.screens.daily.CoinCounterContent
 import de.panda.kassenbuch.ui.screens.daily.DailyContent
 import de.panda.kassenbuch.ui.screens.dashboard.DashboardContent
 import de.panda.kassenbuch.ui.screens.export.ExportContent
+import de.panda.kassenbuch.ui.screens.database.DatabaseContent
 import de.panda.kassenbuch.ui.screens.info.InfoContent
 import de.panda.kassenbuch.ui.screens.settings.SettingsContent
+import de.panda.kassenbuch.data.repository.KassenbuchRepository
 import de.panda.kassenbuch.ui.theme.KassenbuchTheme
 import de.panda.kassenbuch.util.PrefsManager
+import de.panda.kassenbuch.util.seedDemoDataIfEmpty
+import kotlinx.coroutines.launch
 import kassenbuch.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -35,11 +42,24 @@ val LocalThemeChanger = staticCompositionLocalOf<(String) -> Unit> { {} }
 @Composable
 fun App() {
     val prefs = koinInject<PrefsManager>()
+    val repository = koinInject<KassenbuchRepository>()
     var themeMode by remember { mutableStateOf(prefs.themeMode) }
 
-    CompositionLocalProvider(LocalThemeChanger provides { themeMode = it }) {
+    // Demo-Daten beim ersten Start einfuegen
+    LaunchedEffect(Unit) {
+        launch { seedDemoDataIfEmpty(repository) }
+    }
+
+    val statusPopupController = koinInject<StatusPopupController>()
+
+    CompositionLocalProvider(
+        LocalThemeChanger provides { themeMode = it },
+        LocalStatusPopup provides statusPopupController
+    ) {
         KassenbuchTheme(themeMode = themeMode) {
             val navController = rememberNavController()
+
+            StatusPopup(statusPopupController)
 
             NavHost(
                 navController = navController,
@@ -88,6 +108,7 @@ fun HomeContent(
         TabItem(Res.string.nav_bookings, Icons.Filled.Receipt, Icons.Outlined.Receipt),
         TabItem(Res.string.nav_daily, Icons.Filled.Summarize, Icons.Outlined.Summarize),
         TabItem(Res.string.nav_export, Icons.Filled.FileDownload, Icons.Outlined.FileDownload),
+        TabItem(Res.string.nav_database, Icons.Filled.Storage, Icons.Outlined.Storage),
         TabItem(Res.string.nav_info, Icons.Filled.Info, Icons.Outlined.Info)
     )
 
@@ -177,7 +198,8 @@ private fun TabContent(
         )
         2 -> DailyContent()
         3 -> ExportContent()
-        4 -> InfoContent()
+        4 -> DatabaseContent()
+        5 -> InfoContent()
     }
 }
 

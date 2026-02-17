@@ -11,14 +11,14 @@ object Formatter {
     fun dezimal(betrag: Double): String = PlatformFormatter.formatDecimal(betrag)
 
     fun datum(date: LocalDate): String {
-        val d = date.dayOfMonth.toString().padStart(2, '0')
-        val m = date.monthNumber.toString().padStart(2, '0')
+        val d = date.day.toString().padStart(2, '0')
+        val m = date.month.toString().padStart(2, '0')
         return "$d.$m.${date.year}"
     }
 
     fun datumKurz(date: LocalDate): String {
-        val d = date.dayOfMonth.toString().padStart(2, '0')
-        val m = date.monthNumber.toString().padStart(2, '0')
+        val d = date.day.toString().padStart(2, '0')
+        val m = date.month.toString().padStart(2, '0')
         return "$d.$m."
     }
 
@@ -29,19 +29,19 @@ object Formatter {
     }
 
     fun datumDatev(date: LocalDate): String {
-        val d = date.dayOfMonth.toString().padStart(2, '0')
-        val m = date.monthNumber.toString().padStart(2, '0')
+        val d = date.day.toString().padStart(2, '0')
+        val m = date.month.toString().padStart(2, '0')
         return "$d$m"
     }
 
     fun datumDatevFull(date: LocalDate): String {
-        val d = date.dayOfMonth.toString().padStart(2, '0')
-        val m = date.monthNumber.toString().padStart(2, '0')
+        val d = date.day.toString().padStart(2, '0')
+        val m = date.month.toString().padStart(2, '0')
         return "${date.year}$m$d"
     }
 
     fun datumDatevYearMonth(date: LocalDate): String {
-        val m = date.monthNumber.toString().padStart(2, '0')
+        val m = date.month.toString().padStart(2, '0')
         return "${date.year}$m"
     }
 

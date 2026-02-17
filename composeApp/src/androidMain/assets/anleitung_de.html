@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kassenbuch Anleitung — Döner Imbiss</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232734;
+    --border: #2e3345;
+    --text: #e4e7f0;
+    --text-dim: #8b90a5;
+    --accent: #4f8cff;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --orange: #fb923c;
+    --purple: #a855f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding: 2rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* Navigation */
+  nav {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 1rem;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  nav .nav-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-right: 1.25rem;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--green); }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 0.25rem 0; }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  header h1 span { color: var(--accent); }
+  header .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 0.25rem; }
+
+  /* Sections */
+  .chapter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    scroll-margin-top: 5rem;
+  }
+  .chapter-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  .chapter h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .chapter h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--yellow);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .chapter p {
+    font-size: 0.92rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  /* Info boxes */
+  .info-box {
+    background: var(--surface2);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .info-box.warning {
+    border-left-color: var(--red);
+    background: rgba(248,113,113,0.07);
+  }
+  .info-box.success {
+    border-left-color: var(--green);
+    background: rgba(52,211,153,0.07);
+  }
+  .info-box.tip {
+    border-left-color: var(--yellow);
+    background: rgba(251,191,36,0.07);
+  }
+  .info-box .box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+  .info-box.warning .box-title { color: var(--red); }
+  .info-box.success .box-title { color: var(--green); }
+  .info-box.tip .box-title { color: var(--yellow); }
+
+  /* Buchung examples */
+  .buchung {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .buchung .soll { color: var(--green); }
+  .buchung .haben { color: var(--red); }
+  .buchung .konto { color: var(--orange); font-weight: 700; }
+  .buchung .arrow { color: var(--text-dim); }
+  .buchung .betrag { color: var(--accent); font-weight: 700; }
+  .buchung .desc { color: var(--text-dim); font-size: 0.78rem; flex-basis: 100%; margin-top: 0.25rem; }
+
+  /* Flow diagrams */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    font-size: 0.85rem;
+    min-width: 120px;
+  }
+  .flow-step .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+  .flow-arrow {
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+  .compare-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface2);
+  }
+  .compare-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare-table tr:hover { background: var(--surface2); }
+  .yes { color: var(--green); font-weight: 600; }
+  .no { color: var(--red); font-weight: 600; }
+  .konto-tag {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(251,191,36,0.12);
+    color: var(--yellow);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ust-tag {
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .ust7 { background: rgba(52,211,153,0.12); color: var(--green); }
+  .ust19 { background: rgba(251,146,60,0.12); color: var(--orange); }
+  .ust0 { background: rgba(168,85,247,0.12); color: var(--purple); }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding-left: 2rem;
+    border-left: 3px solid var(--accent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem;
+    top: 0.35rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+  }
+  .timeline-item .time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--yellow);
+    font-weight: 600;
+  }
+  .timeline-item .action {
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+  .timeline-item .detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 700px) {
+    body { padding: 1rem; }
+    .chapter { padding: 1.25rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    nav { position: static; }
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .chapter, nav, header { background: #fff; border-color: #ccc; }
+    .info-box { background: #f8f8f8; }
+    .buchung { background: #f5f5f5; }
+    nav { position: static; }
+    :root { --accent: #2563eb; --text-dim: #666; --border: #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>KASSEN<span>BUCH</span> ANLEITUNG</h1>
+  <div class="subtitle">Detaillierte Anleitung für Döner-Imbiss und Gastronomiebetriebe in Deutschland</div>
+</header>
+
+<nav>
+  <div class="nav-title">Inhaltsverzeichnis</div>
+  <div class="nav-links">
+    <a href="#kap1">1. Was ist ein Kassenbuch?</a>
+    <a href="#kap2">2. Gesetzliche Pflichten</a>
+    <a href="#kap3">3. DATEV Kontenrahmen</a>
+    <a href="#kap4">4. Täglicher Ablauf</a>
+    <a href="#kap5">5. Z-Bericht</a>
+    <a href="#kap6">6. Wechselgeld</a>
+    <a href="#kap7">7. Übertrag</a>
+    <a href="#kap8">8. Kartenzahlungen</a>
+    <a href="#kap9">9. Gutscheine</a>
+    <a href="#kap10">10. Wareneinkauf</a>
+    <a href="#kap11">11. Bankeinzahlung</a>
+    <a href="#kap12">12. USt-Aufteilung</a>
+    <a href="#kap13">13. Häufige Fehler</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 1 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap1">
+  <span class="chapter-num">Kapitel 01</span>
+  <h2>Was ist ein Kassenbuch?</h2>
+
+  <p>
+    Ein Kassenbuch ist ein <strong>gesetzlich vorgeschriebenes Buchführungsinstrument</strong>, in dem sämtliche Bargeldbewegungen eines Unternehmens lückenlos und chronologisch dokumentiert werden. Jeder Euro, der in die Kasse hineingeht oder aus der Kasse herausgenommen wird, muss im Kassenbuch erfasst werden.
+  </p>
+
+  <p>
+    Die Pflicht zur Führung eines Kassenbuchs ergibt sich aus <strong>§ 146 AO</strong> (Abgabenordnung) in Verbindung mit den <strong>GoBD</strong> (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form). Jedes Unternehmen, das zur <strong>doppelten Buchführung</strong> (Bilanzierung) verpflichtet ist, muss ein Kassenbuch führen. Das betrifft insbesondere GmbHs, UGs und Einzelunternehmen, die über die Grenzen der Einnahmenüberschussrechnung hinausgehen.
+  </p>
+
+  <p>
+    Für Ihren Döner-Imbiss bedeutet das konkret: Jeder Cent, der in Ihre Kasse fließt und jeder Cent, der die Kasse verlässt, muss dokumentiert werden — vom Barumsatz über den Wechselgeld-Einlage bis hin zum Einkauf beim Netto um die Ecke.
+  </p>
+
+  <div class="info-box">
+    <div class="box-title">Grundprinzip</div>
+    Das Ziel des Kassenbuchs: Der physische Bargeldbestand in Ihrer Kasse muss zu <strong>jedem Zeitpunkt</strong> mit dem rechnerischen Saldo im Kassenbuch exakt übereinstimmen. Bei einer Kassennachschau oder Betriebsprüfung durch das Finanzamt wird die Kasse gezählt und mit dem Kassenbuch-Saldo verglichen.
+  </div>
+
+  <h3>Was gehört ins Kassenbuch?</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Art der Bewegung</th>
+        <th>Ins Kassenbuch?</th>
+        <th>Erläuterung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Barverkauf (Z-Bericht, BAR-Anteil)</td>
+        <td class="yes">JA</td>
+        <td>Tägliche Bareinnahmen laut Z-Bericht</td>
+      </tr>
+      <tr>
+        <td>EC-Karte / Kreditkarte</td>
+        <td class="no">NEIN</td>
+        <td>Geht direkt auf das Bankkonto — kein Bargeld</td>
+      </tr>
+      <tr>
+        <td>Wechselgeld Einlage</td>
+        <td class="yes">JA</td>
+        <td>Private Geldeinlage in die Kasse</td>
+      </tr>
+      <tr>
+        <td>Wechselgeld Entnahme</td>
+        <td class="yes">JA</td>
+        <td>Private Geldentnahme aus der Kasse</td>
+      </tr>
+      <tr>
+        <td>Bareinkauf (z. B. Netto, Metro bar)</td>
+        <td class="yes">JA</td>
+        <td>Barausgabe aus der Kasse</td>
+      </tr>
+      <tr>
+        <td>Bankeinzahlung (Kasse an Bank)</td>
+        <td class="yes">JA</td>
+        <td>Wird als Kassenausgabe erfasst</td>
+      </tr>
+      <tr>
+        <td>Gutschein-Verkauf (bar)</td>
+        <td class="yes">JA</td>
+        <td>Wird mit 0 % USt erfasst</td>
+      </tr>
+      <tr>
+        <td>Gehälter, Miete, Versicherungen</td>
+        <td class="no">NEIN</td>
+        <td>Werden über das Bankkonto abgewickelt</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <div class="box-title">Faustregel</div>
+    Fragen Sie sich: Fließt <strong>Bargeld</strong> in die Kasse hinein oder aus der Kasse heraus? Wenn ja, gehört es ins Kassenbuch. Wenn die Zahlung über Bank, Karte oder Überweisung läuft, gehört sie <strong>nicht</strong> ins Kassenbuch.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 2 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap2">
+  <span class="chapter-num">Kapitel 02</span>
+  <h2>Gesetzliche Pflichten</h2>
+
+  <p>
+    Die Kassenbuchführung unterliegt strengen gesetzlichen Vorgaben. Die wichtigsten Regeln ergeben sich aus der <strong>Abgabenordnung (AO § 146)</strong> und den <strong>GoBD</strong>. Seit dem 01.01.2020 ist zusätzlich die <strong>TSE (Technische Sicherheitseinrichtung)</strong> für elektronische Kassensysteme vorgeschrieben.
+  </p>
+
+  <h3>Die vier GoBD-Grundsätze</h3>
+
+  <div class="info-box">
+    <div class="box-title">1. Zeitnah</div>
+    Alle Kasseneinnahmen und -ausgaben müssen <strong>zeitnah</strong> erfasst werden — idealerweise noch am selben Tag, spätestens jedoch am nächsten Werktag. Eine wöchentliche oder gar monatliche Erfassung ist <strong>nicht zulässig</strong>.
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">2. Lückenlos</div>
+    Die Aufzeichnungen müssen <strong>lückenlos</strong> sein. Kein Tag darf übersprungen werden. Auch an Ruhetagen oder bei Betriebsferien sollte ein Eintrag erfolgen (z. B. „Ruhetag — kein Umsatz"). Die fortlaufende Nummerierung der Belege darf keine Lücken aufweisen.
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">3. Unveränderbar</div>
+    Einmal getätigte Eintragungen dürfen <strong>nicht gelöscht, überschrieben oder nachträglich verändert</strong> werden. Korrekturen erfolgen ausschließlich über eine Stornobuchung (Gegenbuchung). Bei elektronischen Kassenbüchern muss eine vollständige Änderungshistorie vorhanden sein.
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">4. Einzelaufzeichnungspflicht</div>
+    Grundsätzlich muss <strong>jeder einzelne Geschäftsvorfall</strong> einzeln aufgezeichnet werden. Im Gastronomiebereich erfüllt der Z-Bericht diese Pflicht, da die Einzelbons im Kassensystem gespeichert sind. Der Z-Bericht fasst die Tagesumsätze zusammen und wird als Tagesabschluss-Beleg ins Kassenbuch übernommen.
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Kassenminusverbot</div>
+    Der Kassenbestand darf zu <strong>keinem Zeitpunkt negativ</strong> werden! Ein negativer Kassenbestand bedeutet, dass mehr Geld aus der Kasse entnommen wurde, als vorhanden war — das ist physisch unmöglich und wird vom Finanzamt als schwerwiegender Mangel gewertet. Achten Sie darauf, dass Sie morgens zuerst das Wechselgeld einlegen, <strong>bevor</strong> Sie Ausgaben tätigen.
+  </div>
+
+  <h3>TSE-Pflicht (Technische Sicherheitseinrichtung)</h3>
+  <p>
+    Seit dem 01.01.2020 müssen alle elektronischen Kassensysteme (Registrierkassen) mit einer <strong>zertifizierten TSE</strong> ausgestattet sein. Die TSE signiert jeden Kassenvorgang kryptographisch und macht ihn damit fälschungssicher. Jeder Z-Bericht muss eine TSE-Signatur enthalten. Bei Verstößen drohen Bußgelder bis zu <strong>25.000 Euro</strong>.
+  </p>
+
+  <h3>Aufbewahrungsfrist</h3>
+  <p>
+    Alle Kassenbuch-Aufzeichnungen, Z-Berichte, Kassenbelege und zugehörige Unterlagen müssen <strong>10 Jahre</strong> lang aufbewahrt werden. Dies gilt sowohl für digitale als auch für papiergebundene Dokumente. Empfehlung: Bewahren Sie sowohl digitale Sicherungen als auch Papierbelege auf.
+  </p>
+
+  <div class="info-box success">
+    <div class="box-title">Zusammenfassung der Pflichten</div>
+    <p><strong>Zeitnah:</strong> Tägliche Erfassung, spätestens am nächsten Werktag</p>
+    <p><strong>Lückenlos:</strong> Kein Tag ohne Eintrag, fortlaufende Belegnummern</p>
+    <p><strong>Unveränderbar:</strong> Keine Löschungen, nur Stornobuchungen</p>
+    <p><strong>TSE-Pflicht:</strong> Kryptographische Absicherung aller Kassenvorgänge</p>
+    <p><strong>Aufbewahrung:</strong> 10 Jahre für alle Kassenunterlagen</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 3 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap3">
+  <span class="chapter-num">Kapitel 03</span>
+  <h2>DATEV Kontenrahmen (SKR03)</h2>
+
+  <p>
+    In Deutschland verwenden die meisten Steuerberater den <strong>DATEV-Kontenrahmen SKR03</strong>. Die folgenden Konten sind für Ihren Döner-Imbiss relevant. Jede Buchung im Kassenbuch benötigt ein Gegenkonto — die unten aufgeführten Kontonummern werden dafür verwendet.
+  </p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Konto Nr.</th>
+        <th>Bezeichnung</th>
+        <th>Verwendung</th>
+        <th>Richtung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="konto-tag">1000</span></td>
+        <td>Kasse</td>
+        <td>Hauptkassenkonto — wird bei jeder Buchung automatisch angesprochen</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1200</span></td>
+        <td>Bank</td>
+        <td>Bankkonto (hier landen EC-/Kreditkartenzahlungen)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1360</span></td>
+        <td>Geldtransit</td>
+        <td>Übergangskonto für Bargeldeinzahlungen auf die Bank</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1590</span></td>
+        <td>Durchlaufende Posten</td>
+        <td>Gutschein-Verkauf (0 % USt)</td>
+        <td>Einnahme</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1800</span></td>
+        <td>Privatentnahme</td>
+        <td>Private Geldentnahme aus der Kasse (Wechselgeld herausnehmen)</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">1890</span></td>
+        <td>Privateinlage</td>
+        <td>Private Geldeinlage in die Kasse (Wechselgeld einlegen)</td>
+        <td>Einnahme</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">3300</span></td>
+        <td>Wareneingang 7 %</td>
+        <td>Bareinkauf von Lebensmitteln (Tomaten, Brot, Salat usw.)</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">3400</span></td>
+        <td>Wareneingang 19 %</td>
+        <td>Bareinkauf mit 19 % USt (Getränke, Verpackungsmaterial usw.)</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">4930</span></td>
+        <td>Bürobedarf</td>
+        <td>Büromaterial — Stifte, Papier, Bonrollen usw.</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">4980</span></td>
+        <td>Sonstige Kosten</td>
+        <td>Sonstige Ausgaben — Reinigungsmittel, Kleinbedarf usw.</td>
+        <td>Ausgabe</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">8100</span></td>
+        <td>Erlöse 7 %</td>
+        <td>Umsatzerlöse mit 7 % USt (Speisen zum Mitnehmen)</td>
+        <td>Einnahme</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">8300</span></td>
+        <td>Erlöse 19 %</td>
+        <td>Umsatzerlöse mit 19 % USt (Getränke + Verzehr vor Ort)</td>
+        <td>Einnahme</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Umsatzsteuer-Regeln für die Gastronomie</h3>
+
+  <div class="info-box tip">
+    <div class="box-title">USt-Sätze auf einen Blick</div>
+    <p><span class="ust-tag ust7">7 % USt</span> — Speisen zum Mitnehmen: Döner, Dürüm, Lahmacun, Pizza, Pommes (Außer-Haus-Verkauf)</p>
+    <p><span class="ust-tag ust19">19 % USt</span> — Getränke (immer 19 %) + Speisen bei Verzehr vor Ort (Im-Haus-Verkauf)</p>
+    <p><span class="ust-tag ust0">0 % USt</span> — Gutschein-Verkauf (Steuer fällt erst bei Einlösung an)</p>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Wichtig: Außer Haus vs. Im Haus</div>
+    <p>Wenn der Kunde <strong>vor Ort isst</strong> (Im Haus / Verzehr vor Ort), fällt auf Speisen <strong>19 % USt</strong> an. Beim <strong>Mitnehmen</strong> (Außer Haus / zum Mitnehmen) nur <strong>7 %</strong>. Ihr Kassensystem muss diese Unterscheidung automatisch vornehmen!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 4 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap4">
+  <span class="chapter-num">Kapitel 04</span>
+  <h2>Täglicher Ablauf</h2>
+
+  <p>Als Inhaber eines Döner-Imbisses sieht Ihr täglicher Ablauf bei der Kassenbuchführung folgendermaßen aus:</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">07:00 — Laden öffnen</div>
+      <div class="action"><strong>Wechselgeld Einlage:</strong> 100 Euro Wechselgeld in die Kasse legen</div>
+      <div class="detail">Buchung: Kasse 1000 an Privateinlage 1890 — 100,00 Euro. Dies muss die ERSTE Buchung des Tages sein!</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">07:00–22:00 — Geschäftsbetrieb</div>
+      <div class="action"><strong>Verkauf:</strong> Die Kasse erfasst jeden Verkauf automatisch (Einzelbon)</div>
+      <div class="detail">Einzelne Verkäufe müssen nicht separat ins Kassenbuch — der Z-Bericht fasst alles zusammen</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">Tagsüber — bei Bedarf</div>
+      <div class="action"><strong>Bareinkauf:</strong> Einkauf beim Netto, Metro usw. mit Bargeld aus der Kasse</div>
+      <div class="detail">Kassenbon aufbewahren und als Barausgabe im Kassenbuch erfassen</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Feierabend (Schritt 1/4)</div>
+      <div class="action"><strong>Z-Bericht drucken</strong> (Tagesabschluss)</div>
+      <div class="detail">Z-Bericht-Nummer und Aufteilung BAR/Unbar notieren</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Feierabend (Schritt 2/4)</div>
+      <div class="action"><strong>BAR-Umsatz aus Z-Bericht</strong> ins Kassenbuch eintragen (7 % und 19 % getrennt)</div>
+      <div class="detail">Buchung: Kasse 1000 an Erlöse 8100 (7 %) und Kasse 1000 an Erlöse 8300 (19 %)</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Feierabend (Schritt 3/4)</div>
+      <div class="action"><strong>Wechselgeld Entnahme:</strong> 100 Euro Wechselgeld aus der Kasse nehmen</div>
+      <div class="detail">Buchung: Privatentnahme 1800 an Kasse 1000 — 100,00 Euro</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">22:00 — Feierabend (Schritt 4/4)</div>
+      <div class="action"><strong>Kassensturz:</strong> Physisches Bargeld zählen und mit dem Kassenbuch-Saldo vergleichen</div>
+      <div class="detail">Bei Differenz: Kassendifferenz dokumentieren und Ursache klären</div>
+    </div>
+  </div>
+
+  <div class="info-box success">
+    <div class="box-title">Tagesablauf — Kurzübersicht</div>
+    Wechselgeld einlegen &#8594; Verkaufen &#8594; Z-Bericht drucken &#8594; BAR-Umsatz buchen (7 %/19 % getrennt) &#8594; Bareinkäufe buchen &#8594; Wechselgeld entnehmen &#8594; Ggf. Bankeinzahlung buchen &#8594; Kasse zählen &#8594; Saldo prüfen
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 5 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap5">
+  <span class="chapter-num">Kapitel 05</span>
+  <h2>Z-Bericht (Tagesabschluss)</h2>
+
+  <p>
+    Der Z-Bericht ist der <strong>tägliche Abschlussbericht</strong> Ihres Kassensystems. Er wird jeden Abend nach Geschäftsschluss ausgedruckt und setzt die Tagessummen auf null zurück. Bei TSE-pflichtigen Kassen ist jeder Z-Bericht kryptographisch signiert und somit unveränderbar.
+  </p>
+
+  <h3>Aufbau des Z-Berichts</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feld im Z-Bericht</th>
+        <th>Erläuterung</th>
+        <th>Ins Kassenbuch?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bruttoumsatz Gesamt</td>
+        <td>Gesamtumsatz des Tages (BAR + Karte)</td>
+        <td class="no">Nein — nur der BAR-Anteil</td>
+      </tr>
+      <tr>
+        <td>Barzahlung</td>
+        <td>Summe aller Barzahlungen</td>
+        <td class="yes">JA — wird ins Kassenbuch gebucht</td>
+      </tr>
+      <tr>
+        <td>EC-Karte / Kreditkarte</td>
+        <td>Summe aller Kartenzahlungen</td>
+        <td class="no">Nein — geht über Bankkonto</td>
+      </tr>
+      <tr>
+        <td>USt 7 % Anteil (bar)</td>
+        <td>BAR-Umsatz mit 7 % USt</td>
+        <td class="yes">JA — eigene Buchungszeile</td>
+      </tr>
+      <tr>
+        <td>USt 19 % Anteil (bar)</td>
+        <td>BAR-Umsatz mit 19 % USt</td>
+        <td class="yes">JA — eigene Buchungszeile</td>
+      </tr>
+      <tr>
+        <td>Gutschein-Verkauf</td>
+        <td>Bar verkaufte Gutscheine</td>
+        <td class="yes">JA — eigene Zeile mit 0 % USt</td>
+      </tr>
+      <tr>
+        <td>Retouren / Storno</td>
+        <td>Rückgaben und Stornierungen</td>
+        <td class="yes">JA — als Minusbetrag</td>
+      </tr>
+      <tr>
+        <td>Z-Bericht-Nummer</td>
+        <td>Fortlaufende Nummer des Tagesabschlusses</td>
+        <td>Wird als Beleg-Nr. übernommen</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Beispiel: Z-Bericht in Kassenbuch-Buchungen umsetzen</h3>
+  <p>Angenommen, Ihr Z-Bericht zeigt folgende Werte:</p>
+  <p style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--text-dim); margin:0.5rem 0 1rem 0;">
+    Bruttoumsatz: 580,00 € | davon Bar: 420,00 € | davon EC-Karte: 160,00 €<br>
+    Bar davon 7 %: 310,00 € | Bar davon 19 %: 90,00 € | Gutschein-Verkauf: 20,00 €
+  </p>
+
+  <p>Daraus ergeben sich folgende drei Kassenbuch-Buchungen:</p>
+
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">8100 Erlöse 7 %</span>
+    <span class="betrag">310,00 €</span>
+    <span class="desc">Tageseinnahme Bar lt. Z-Bericht Nr. 247 — Speisen 7 % USt</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">8300 Erlöse 19 %</span>
+    <span class="betrag">90,00 €</span>
+    <span class="desc">Tageseinnahme Bar lt. Z-Bericht Nr. 247 — Getränke / Verzehr vor Ort 19 % USt</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">SOLL</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="betrag">20,00 €</span>
+    <span class="desc">Gutschein-Verkauf lt. Z-Bericht Nr. 247 — 0 % USt</span>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Wohin gehen die 160 Euro EC-Karte?</div>
+    Die 160 Euro Kartenzahlung werden <strong>nicht</strong> im Kassenbuch erfasst! Dieser Betrag wird automatisch auf Ihr Bankkonto (1200) überwiesen und erscheint auf dem Kontoauszug. Ihr Steuerberater verarbeitet dies auf der Bankseite.
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">Praxis-Tipp</div>
+    Heften Sie den ausgedruckten Z-Bericht chronologisch ab und notieren Sie die Z-Bericht-Nummer als Beleg-Nr. im Kassenbuch. So können Finanzamt und Steuerberater jede Buchung eindeutig dem zugehörigen Z-Bericht zuordnen.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 6 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap6">
+  <span class="chapter-num">Kapitel 06</span>
+  <h2>Wechselgeld</h2>
+
+  <p>
+    Das Wechselgeld ist das Bargeld, das Sie morgens in die Kasse legen, damit Sie Kunden herausgeben können. In den meisten Döner-Imbissen liegt dieser Betrag zwischen 50 und 150 Euro. Dieses Geld muss im Kassenbuch korrekt erfasst werden — sowohl die Einlage morgens als auch die Entnahme abends.
+  </p>
+
+  <h3>Methode 1: Privateinlage / Privatentnahme (empfohlen)</h3>
+  <p>Die einfachste und gebräuchlichste Methode. Das Wechselgeld wird als privates Geld behandelt:</p>
+
+  <div class="buchung">
+    <span class="soll">MORGENS</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1890 Privateinlage</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">Wechselgeld Einlage — muss die ERSTE Buchung des Tages sein!</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">ABENDS</span>
+    <span class="konto">1800 Privatentnahme</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">Wechselgeld Entnahme — NACH dem Z-Bericht, letzte Buchung des Tages</span>
+  </div>
+
+  <div class="info-box success">
+    <div class="box-title">Empfehlung</div>
+    Methode 1 (Privateinlage/Privatentnahme) ist für die meisten Döner-Imbisse die beste Wahl. Sie ist einfach, übersichtlich und wird von den meisten Steuerberatern empfohlen.
+  </div>
+
+  <h3>Methode 2: Geldtransit / Tresor (professionell)</h3>
+  <p>Wenn das Wechselgeld in einem separaten Tresor oder einer Geldkassette aufbewahrt wird:</p>
+
+  <div class="buchung">
+    <span class="haben">ABENDS</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">Kasse an Tresor — Wechselgeld wird aus der Kasse in den Tresor überführt</span>
+  </div>
+  <div class="buchung">
+    <span class="soll">MORGENS</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="betrag">100,00 €</span>
+    <span class="desc">Tresor an Kasse — Wechselgeld wird vom Tresor in die Kasse gelegt</span>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">Welche Methode ist besser?</div>
+    Für einen einfachen Döner-Imbiss ist <strong>Methode 1 (Privateinlage/Privatentnahme)</strong> ausreichend und einfacher. Die Tresor-Methode eignet sich eher für größere Gastronomiebetriebe mit mehreren Kassen. Sprechen Sie im Zweifelsfall mit Ihrem Steuerberater.
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Reihenfolge beachten!</div>
+    <p><strong>Morgens:</strong> ZUERST Wechselgeld einlegen, DANN mit dem Verkauf beginnen. Sonst könnte die Kasse ins Minus rutschen!</p>
+    <p><strong>Abends:</strong> ZUERST den Z-Bericht buchen, DANN das Wechselgeld entnehmen. Der Saldo darf nach der Entnahme nicht negativ werden!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 7 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap7">
+  <span class="chapter-num">Kapitel 07</span>
+  <h2>Übertrag (Saldovortrag)</h2>
+
+  <p>
+    Der Übertrag ist das <strong>Kettenprinzip</strong> des Kassenbuchs: Der Endbestand (Kassenbestand am Ende des Tages) wird automatisch zum Anfangsbestand (Vortrag) des nächsten Tages. Diese Kette darf niemals unterbrochen werden.
+  </p>
+
+  <h3>So funktioniert der Übertrag</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">Tag 1</span>
+      Endbestand:<br><strong>340,65 €</strong>
+    </div>
+    <div class="flow-arrow">&#8594;</div>
+    <div class="flow-step">
+      <span class="step-num">Tag 2</span>
+      Vortrag:<br><strong>340,65 €</strong>
+    </div>
+    <div class="flow-arrow">&#8594;</div>
+    <div class="flow-step">
+      <span class="step-num">Tag 2</span>
+      + Buchungen<br>Endbestand: <strong>155,65 €</strong>
+    </div>
+    <div class="flow-arrow">&#8594;</div>
+    <div class="flow-step">
+      <span class="step-num">Tag 3</span>
+      Vortrag:<br><strong>155,65 €</strong>
+    </div>
+  </div>
+
+  <h3>Beispiel mit 3 Tagen</h3>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Tag</th>
+        <th>Vortrag</th>
+        <th>Einnahmen</th>
+        <th>Ausgaben</th>
+        <th>Endbestand</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Montag</strong></td>
+        <td>0,00 €</td>
+        <td>+100,00 € (Wechselgeld) +420,00 € (Z-Bericht)</td>
+        <td>-23,45 € (Einkauf) -100,00 € (Wechselgeld raus)</td>
+        <td><strong>396,55 €</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Dienstag</strong></td>
+        <td>396,55 €</td>
+        <td>+100,00 € (Wechselgeld) +380,00 € (Z-Bericht)</td>
+        <td>-15,80 € (Einkauf) -100,00 € (Wechselgeld raus) -600,00 € (Bankeinzahlung)</td>
+        <td><strong>160,75 €</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Mittwoch</strong></td>
+        <td>160,75 €</td>
+        <td>+100,00 € (Wechselgeld) +450,00 € (Z-Bericht)</td>
+        <td>-100,00 € (Wechselgeld raus)</td>
+        <td><strong>610,75 €</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Die Übertrag-Formel</h3>
+  <div class="info-box">
+    <div class="box-title">Formel</div>
+    <p style="font-family:'JetBrains Mono',monospace; font-size:0.95rem; text-align:center;">
+      <strong>Vortrag + Tageseinnahmen - Tagesausgaben = Endbestand (= Vortrag des nächsten Tages)</strong>
+    </p>
+  </div>
+
+  <h3>Monatsübertrag</h3>
+  <p>
+    Der Endbestand des letzten Tages im Monat wird zum Vortrag des ersten Tages des neuen Monats. Es empfiehlt sich, am Monatsende größere Bargeldbestände auf das Bankkonto einzuzahlen (Geldtransit 1360), damit die Kasse mit einem niedrigen Bestand ins neue Monat startet.
+  </p>
+
+  <div class="info-box tip">
+    <div class="box-title">Praxis-Tipp</div>
+    Lassen Sie nicht zu viel Bargeld in der Kasse liegen. Zahlen Sie regelmäßig (1-2 Mal pro Woche) größere Beträge auf Ihr Geschäftskonto ein. Das reduziert das Diebstahlrisiko und sorgt für übersichtliche Kassenbestände.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 8 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap8">
+  <span class="chapter-num">Kapitel 08</span>
+  <h2>Kartenzahlungen (EC-Karte / Kreditkarte)</h2>
+
+  <p>
+    Dieses Thema sorgt häufig für Verwirrung. Die Regel ist jedoch ganz einfach:
+  </p>
+
+  <div class="info-box success">
+    <div class="box-title">Die goldene Regel</div>
+    Kartenzahlungen (EC-Karte, Kreditkarte, kontaktlos) gehören <strong>NICHT</strong> ins Kassenbuch! Das Kassenbuch erfasst ausschließlich <strong>Bargeld</strong>-Bewegungen. Kartenzahlungen fließen direkt auf das Bankkonto.
+  </div>
+
+  <h3>Wie wird der Z-Bericht aufgeteilt?</h3>
+  <p>Der Z-Bericht zeigt den Gesamtumsatz — Sie müssen den BAR-Anteil herausfiltern:</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Position im Z-Bericht</th>
+        <th>Betrag</th>
+        <th>Wohin?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bruttoumsatz Gesamt</td>
+        <td>580,00 €</td>
+        <td>Nirgendwohin (nur Gesamtsumme)</td>
+      </tr>
+      <tr>
+        <td><strong>Barzahlung</strong></td>
+        <td><strong>420,00 €</strong></td>
+        <td class="yes"><strong>KASSENBUCH</strong></td>
+      </tr>
+      <tr>
+        <td>EC-Kartenzahlung</td>
+        <td>130,00 €</td>
+        <td>Bankkonto (1200) — über Kontoauszug</td>
+      </tr>
+      <tr>
+        <td>Kreditkartenzahlung</td>
+        <td>30,00 €</td>
+        <td>Bankkonto (1200) — über Kontoauszug</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box warning">
+    <div class="box-title">Häufiger Fehler</div>
+    <p>Buchen Sie <strong>niemals</strong> den Gesamtumsatz (BAR + Karte) ins Kassenbuch! Sonst stimmt Ihr Kassenbestand nicht mit dem physischen Bargeld überein. <strong>Nur den BAR-Anteil buchen!</strong></p>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">Praxis-Tipp</div>
+    Notieren Sie sich die Kartenumsätze vom Z-Bericht separat und geben Sie diese Information an Ihren Steuerberater weiter. Er gleicht die Kartenumsätze mit dem Bankkonto ab. Ihre einzige Aufgabe: Nur den BAR-Umsatz ins Kassenbuch eintragen.
+  </div>
+
+  <h3>Zusammengefasst</h3>
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">BAR</span>
+      420,00 €<br>&#8594; Kassenbuch
+    </div>
+    <div class="flow-step">
+      <span class="step-num">EC</span>
+      130,00 €<br>&#8594; Bankkonto
+    </div>
+    <div class="flow-step">
+      <span class="step-num">Kredit</span>
+      30,00 €<br>&#8594; Bankkonto
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 9 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap9">
+  <span class="chapter-num">Kapitel 09</span>
+  <h2>Gutscheine</h2>
+
+  <p>
+    Der Verkauf und die Einlösung von Gutscheinen unterliegen besonderen steuerlichen Regeln. Es gibt dabei zwei verschiedene Zeitpunkte zu beachten: den <strong>Verkauf</strong> des Gutscheins und die spätere <strong>Einlösung</strong>.
+  </p>
+
+  <h3>Schritt 1: Gutschein-Verkauf (Kassenbuch-Buchung)</h3>
+  <p>
+    Wenn ein Kunde einen Gutschein über 20 Euro bar kauft, ist das steuerlich gesehen <strong>noch kein Umsatzerlös</strong>. Der Kunde hat noch kein Produkt erhalten — es handelt sich um einen <strong>durchlaufenden Posten</strong>. Die Umsatzsteuer beträgt daher <strong>0 %</strong>.
+  </p>
+
+  <div class="buchung">
+    <span class="soll">VERKAUF</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="arrow">an</span>
+    <span class="konto">1590 Durchl. Posten</span>
+    <span class="betrag">20,00 €</span>
+    <span class="desc">Gutschein-Verkauf Nr. GS-001 — 0 % USt (Mehrzweck-Gutschein)</span>
+  </div>
+
+  <h3>Schritt 2: Gutschein-Einlösung</h3>
+  <p>
+    Wenn der Gutschein später eingelöst wird (z. B. Kunde kauft einen Döner für 18 Euro und eine Cola für 2 Euro), wird der eigentliche Umsatz erst jetzt realisiert. Da jedoch <strong>kein neues Bargeld</strong> in die Kasse fließt (das Geld wurde bereits beim Verkauf bezahlt), ist <strong>keine neue Kassenbuch-Buchung</strong> nötig. Der Umsatz erscheint regulär im Z-Bericht als normaler Verkauf.
+  </p>
+
+  <div class="info-box">
+    <div class="box-title">Einlösung im Detail</div>
+    <p>Die Einlösung wird durch den regulären Kassenbon erfasst. Im Z-Bericht erscheint die Gutschein-Einlösung als Zahlungsart. Die Umbuchung (1590 an 8100/8300) übernimmt Ihr Steuerberater bei der Monatsabrechnung.</p>
+  </div>
+
+  <h3>Mehrzweck-Gutschein vs. Einzweck-Gutschein</h3>
+
+  <div class="info-box warning">
+    <div class="box-title">Wichtige Unterscheidung (seit 01.01.2019)</div>
+    <p><strong>Einzweck-Gutschein:</strong> Der USt-Satz steht beim Verkauf bereits fest (z. B. „Gutschein für 1 Döner zum Mitnehmen" = 7 %). In diesem Fall wird die USt <strong>sofort beim Verkauf</strong> fällig.</p>
+    <p><strong>Mehrzweck-Gutschein:</strong> Der USt-Satz steht beim Verkauf noch NICHT fest (z. B. „Gutschein über 20 Euro" — der Kunde könnte Essen oder Getränke kaufen, im Haus oder zum Mitnehmen). Die USt fällt erst bei <strong>Einlösung</strong> an. Dies ist bei Döner-Imbissen der Regelfall!</p>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">Praxis-Tipp für Döner-Imbisse</div>
+    In den meisten Fällen verkaufen Döner-Imbisse <strong>Mehrzweck-Gutscheine</strong> (Wertgutscheine wie „20 Euro Gutschein"). Diese werden mit 0 % USt auf Konto 1590 gebucht. Sprechen Sie mit Ihrem Steuerberater, wenn Sie spezielle Produkt-Gutscheine anbieten möchten.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 10 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap10">
+  <span class="chapter-num">Kapitel 10</span>
+  <h2>Wareneinkauf (Bareinkauf)</h2>
+
+  <p>
+    Großeinkäufe (z. B. 100 kg Dönerfleisch, Großhandelslieferungen) werden in der Regel per Rechnung und Überweisung bezahlt — das erledigt Ihr Steuerberater über das Bankkonto. Kleine Bareinkäufe aus der Kasse (Netto, Metro, Rewe usw.) müssen jedoch im <strong>Kassenbuch</strong> erfasst werden.
+  </p>
+
+  <h3>Wie wird ein Bareinkauf gebucht?</h3>
+
+  <div class="buchung">
+    <span class="haben">AUSGABE</span>
+    <span class="konto">3300 Wareneing. 7 %</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">23,45 €</span>
+    <span class="desc">Netto — Tomaten 5 kg, Kopfsalat 2 Stk., Zwiebeln 3 kg (Beleg K-001)</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">AUSGABE</span>
+    <span class="konto">3400 Wareneing. 19 %</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">18,90 €</span>
+    <span class="desc">Netto — Cola 2 Kisten, Fanta 1 Kiste (Beleg K-002)</span>
+  </div>
+
+  <h3>Gemischte Einkäufe (7 % und 19 % auf einem Bon)</h3>
+  <p>
+    Wenn auf einem Kassenbon sowohl Artikel mit 7 % (Lebensmittel) als auch mit 19 % (Getränke, Non-Food) enthalten sind, müssen diese <strong>getrennt</strong> gebucht werden. Auf dem Kassenbon finden Sie die Aufteilung in der Regel am Ende (z. B. „A = 7 %, B = 19 %").
+  </p>
+
+  <div class="buchung">
+    <span class="haben">AUSGABE</span>
+    <span class="konto">3300 Wareneing. 7 %</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">15,30 €</span>
+    <span class="desc">Netto — Lebensmittel (7 %-Anteil vom Bon) — Beleg K-003</span>
+  </div>
+  <div class="buchung">
+    <span class="haben">AUSGABE</span>
+    <span class="konto">3400 Wareneing. 19 %</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">8,95 €</span>
+    <span class="desc">Netto — Getränke + Verpackung (19 %-Anteil vom Bon) — Beleg K-003</span>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Belegpflicht!</div>
+    Für jeden Bareinkauf aus der Kasse <strong>muss</strong> ein Beleg (Kassenbon oder Rechnung) vorhanden sein! Bewahren Sie alle Belege chronologisch auf und versehen Sie sie mit einer fortlaufenden Belegnummer (K-001, K-002, K-003 usw.). Buchungen ohne Beleg können vom Finanzamt nicht anerkannt werden.
+  </div>
+
+  <h3>Welche Einkäufe gehören ins Kassenbuch?</h3>
+  <div class="info-box">
+    <div class="box-title">Übersicht: Kassenbuch vs. Steuerberater</div>
+    <table class="compare-table" style="margin:0.5rem 0 0 0;">
+      <thead>
+        <tr>
+          <th>Einkauf</th>
+          <th>Bezahlung</th>
+          <th>Wer verbucht es?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>100 kg Dönerfleisch (Großhandel)</td>
+          <td>Rechnung / Überweisung</td>
+          <td>Steuerberater</td>
+        </tr>
+        <tr>
+          <td>5 kg Tomaten (Netto, bar)</td>
+          <td>Bargeld aus der Kasse</td>
+          <td>Sie — Kassenbuch</td>
+        </tr>
+        <tr>
+          <td>Metro-Einkauf (Karte)</td>
+          <td>EC-Karte / Rechnung</td>
+          <td>Steuerberater</td>
+        </tr>
+        <tr>
+          <td>Reinigungsmittel (DM, bar)</td>
+          <td>Bargeld aus der Kasse</td>
+          <td>Sie — Kassenbuch (4980)</td>
+        </tr>
+        <tr>
+          <td>Bonrollen, Stifte (bar)</td>
+          <td>Bargeld aus der Kasse</td>
+          <td>Sie — Kassenbuch (4930)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 11 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap11">
+  <span class="chapter-num">Kapitel 11</span>
+  <h2>Bankeinzahlung</h2>
+
+  <p>
+    Wenn Sie Bargeld aus der Kasse auf Ihr Geschäftskonto bei der Bank einzahlen, muss dies im Kassenbuch als <strong>Ausgabe</strong> (Kassenausgang) erfasst werden. Das Geld verlässt die Kasse — der Kassenbestand sinkt entsprechend.
+  </p>
+
+  <h3>So buchen Sie eine Bankeinzahlung</h3>
+
+  <div class="buchung">
+    <span class="haben">AUSGABE</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="arrow">an</span>
+    <span class="konto">1000 Kasse</span>
+    <span class="betrag">600,00 €</span>
+    <span class="desc">Bareinzahlung auf Geschäftskonto — Einzahlungsbeleg Nr. T-001</span>
+  </div>
+
+  <h3>Warum Konto 1360 (Geldtransit) und nicht 1200 (Bank)?</h3>
+  <p>
+    Zwischen dem Moment, in dem Sie das Geld aus der Kasse nehmen, und dem Zeitpunkt, an dem es auf Ihrem Bankkonto gutgeschrieben wird, befindet sich das Geld „unterwegs" (im Transit). Deshalb wird das Konto <strong>1360 Geldtransit</strong> als Zwischenkonto verwendet. Ihr Steuerberater bucht dann bei Erhalt des Kontoauszugs:
+  </p>
+
+  <div class="buchung">
+    <span class="soll">BANK</span>
+    <span class="konto">1200 Bank</span>
+    <span class="arrow">an</span>
+    <span class="konto">1360 Geldtransit</span>
+    <span class="betrag">600,00 €</span>
+    <span class="desc">Gutschrift Bareinzahlung lt. Kontoauszug — diese Buchung macht der Steuerberater</span>
+  </div>
+
+  <h3>Der Geldfluss im Überblick</h3>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">1</span>
+      Kasse 1000<br>-600 €
+    </div>
+    <div class="flow-arrow">&#8594;</div>
+    <div class="flow-step">
+      <span class="step-num">2</span>
+      Geldtransit 1360<br>(Übergang)
+    </div>
+    <div class="flow-arrow">&#8594;</div>
+    <div class="flow-step">
+      <span class="step-num">3</span>
+      Bank 1200<br>+600 €
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <div class="box-title">Kassenbestand prüfen!</div>
+    <p>Stellen Sie sicher, dass nach der Bankeinzahlung der Kassenbestand <strong>nicht negativ</strong> wird! Wenn Ihre Kasse nur 500 Euro enthält, können Sie keine 600 Euro einzahlen. Prüfen Sie immer den aktuellen Saldo vor der Einzahlung.</p>
+  </div>
+
+  <div class="info-box tip">
+    <div class="box-title">Praxis-Tipp</div>
+    <p>Zahlen Sie 1-2 Mal pro Woche größere Beträge auf Ihr Bankkonto ein. Bewahren Sie den Einzahlungsbeleg der Bank als Nachweis auf. Wenn Sie den Bankautomaten nutzen, erhalten Sie einen Einzahlungsbeleg — diesen unbedingt aufheben!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 12 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap12">
+  <span class="chapter-num">Kapitel 12</span>
+  <h2>USt-Aufteilung (7 % / 19 %)</h2>
+
+  <p>
+    Die korrekte Umsatzsteuer-Zuordnung ist in der Gastronomie besonders wichtig und zugleich eine der häufigsten Fehlerquellen. In diesem Kapitel erfahren Sie, wann welcher Steuersatz gilt.
+  </p>
+
+  <h3>Überblick: Wann gilt 7 %, wann 19 %?</h3>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Produkt / Situation</th>
+        <th>Außer Haus (Mitnehmen)</th>
+        <th>Im Haus (Vor Ort essen)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Döner im Brot</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Dürüm</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Lahmacun</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Pizza</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Pommes Frites</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Salat / Beilagen</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Cola, Fanta, Sprite, Wasser</td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Ayran (Milcherzeugnis)</td>
+        <td><span class="ust-tag ust7">7 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Bier / Alkoholische Getränke</td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+        <td><span class="ust-tag ust19">19 %</span></td>
+      </tr>
+      <tr>
+        <td>Gutschein-Verkauf</td>
+        <td colspan="2"><span class="ust-tag ust0">0 %</span> — Steuer fällt erst bei Einlösung an</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box warning">
+    <div class="box-title">Sonderfall Ayran</div>
+    Ayran gilt als <strong>Milcherzeugnis</strong> und unterliegt beim Mitnehmen dem ermäßigten Steuersatz von 7 %. Beim Verzehr vor Ort jedoch 19 %. Achten Sie darauf, dass Ihr Kassensystem Ayran korrekt zuordnet — viele Systeme behandeln Ayran fälschlicherweise immer mit 19 %!
+  </div>
+
+  <div class="info-box">
+    <div class="box-title">Die Grundregel</div>
+    <p><strong>Speisen zum Mitnehmen = 7 %</strong> (ermäßigter Steuersatz nach § 12 Abs. 2 UStG)</p>
+    <p><strong>Speisen zum Vor-Ort-Verzehr = 19 %</strong> (Regelsteuersatz, da eine Dienstleistung erbracht wird)</p>
+    <p><strong>Getränke = immer 19 %</strong> (Ausnahme: Milch und Milcherzeugnisse zum Mitnehmen = 7 %)</p>
+  </div>
+
+  <h3>BU-Schlüssel (Buchungsschlüssel) für DATEV</h3>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>BU-Schlüssel</th>
+        <th>Bedeutung</th>
+        <th>Wann verwenden?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="konto-tag">2</span></td>
+        <td>7 % Umsatzsteuer</td>
+        <td>Erlöse aus Speisen zum Mitnehmen (Konto 8100)</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">3</span></td>
+        <td>19 % Umsatzsteuer</td>
+        <td>Erlöse aus Getränken / Vor-Ort-Verzehr (Konto 8300)</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">8</span></td>
+        <td>7 % Vorsteuer</td>
+        <td>Einkauf von Lebensmitteln (Konto 3300)</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">9</span></td>
+        <td>19 % Vorsteuer</td>
+        <td>Einkauf von Getränken, Verpackung usw. (Konto 3400)</td>
+      </tr>
+      <tr>
+        <td><span class="konto-tag">40</span></td>
+        <td>Steuerfrei</td>
+        <td>Gutschein-Verkauf (Konto 1590), Privateinlage/-entnahme</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <div class="box-title">So wird es im Kassenbuch umgesetzt</div>
+    <p>Im Kassenbuch werden die BAR-Umsätze aus dem Z-Bericht nach USt-Sätzen getrennt gebucht:</p>
+    <p><strong>7 %-Anteil:</strong> Kasse 1000 an Erlöse 8100 (BU 2)</p>
+    <p><strong>19 %-Anteil:</strong> Kasse 1000 an Erlöse 8300 (BU 3)</p>
+    <p><strong>Gutschein:</strong> Kasse 1000 an Durchl. Posten 1590 (BU 40)</p>
+    <p>Ihr Kassensystem sollte die Aufteilung automatisch im Z-Bericht ausweisen.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KAPITEL 13 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="chapter" id="kap13">
+  <span class="chapter-num">Kapitel 13</span>
+  <h2>Häufige Fehler</h2>
+
+  <p>
+    Die folgenden Fehler werden in der Gastronomie besonders häufig gemacht. Vermeiden Sie diese Stolperfallen, um bei einer Kassennachschau oder Betriebsprüfung keine Probleme zu bekommen.
+  </p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:5%;">#</th>
+        <th>Fehler</th>
+        <th>Richtig</th>
+        <th>Konsequenz</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td class="no">Kassenbestand wird negativ (Kassenminusverbot)</td>
+        <td class="yes">Zuerst Wechselgeld einlegen, dann erst Ausgaben tätigen</td>
+        <td>Schwerwiegender Mangel — Schätzungsbefugnis des Finanzamts</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td class="no">Wechselgeld-Buchung vergessen</td>
+        <td class="yes">Morgens Einlage und abends Entnahme immer buchen</td>
+        <td>Saldo stimmt nicht — Kassendifferenz bei Prüfung</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td class="no">BAR- und Kartenumsatz vermischt ins Kassenbuch</td>
+        <td class="yes">Nur den BAR-Anteil aus dem Z-Bericht buchen</td>
+        <td>Kassenbestand stimmt nicht mit physischem Bargeld überein</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td class="no">Falscher USt-Satz (7 % statt 19 % oder umgekehrt)</td>
+        <td class="yes">Z-Bericht genau lesen, 7 % und 19 % getrennt buchen</td>
+        <td>Fehlerhafte USt-Voranmeldung, Steuernachzahlung</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td class="no">Z-Bericht nicht täglich gedruckt</td>
+        <td class="yes">Jeden Geschäftstag einen Z-Bericht erstellen und aufbewahren</td>
+        <td>Verstoß gegen GoBD — Einzelaufzeichnungspflicht verletzt</td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td class="no">Buchungen erst Tage oder Wochen später erfasst</td>
+        <td class="yes">Tägliche Erfassung, spätestens am nächsten Werktag</td>
+        <td>Verstoß gegen GoBD-Grundsatz „zeitnah"</td>
+      </tr>
+      <tr>
+        <td><strong>7</strong></td>
+        <td class="no">Kein täglicher Kassensturz</td>
+        <td class="yes">Jeden Abend Bargeld zählen und mit Saldo vergleichen</td>
+        <td>Differenzen fallen erst spät auf, schwer nachzuvollziehen</td>
+      </tr>
+      <tr>
+        <td><strong>8</strong></td>
+        <td class="no">Alte Buchungen löschen statt stornieren</td>
+        <td class="yes">Stornobuchung (Gegenbuchung) erstellen</td>
+        <td>Verstoß gegen GoBD-Grundsatz „unveränderbar"</td>
+      </tr>
+      <tr>
+        <td><strong>9</strong></td>
+        <td class="no">Gutschein als Umsatzerlös mit USt buchen</td>
+        <td class="yes">Gutschein-Verkauf über 1590 Durchl. Posten mit 0 % USt</td>
+        <td>USt wird zum falschen Zeitpunkt abgeführt</td>
+      </tr>
+      <tr>
+        <td><strong>10</strong></td>
+        <td class="no">Bareinkäufe ohne Beleg (Kassenbon)</td>
+        <td class="yes">Für jeden Bareinkauf Beleg aufbewahren und nummerieren</td>
+        <td>Betriebsausgabe wird nicht anerkannt — höhere Steuerbelastung</td>
+      </tr>
+      <tr>
+        <td><strong>11</strong></td>
+        <td class="no">Tage ohne Eintrag (auch Ruhetage)</td>
+        <td class="yes">An Ruhetagen „Ruhetag — kein Umsatz" eintragen</td>
+        <td>Verstoß gegen GoBD-Grundsatz „lückenlos"</td>
+      </tr>
+      <tr>
+        <td><strong>12</strong></td>
+        <td class="no">Zu viel Bargeld in der Kasse angesammelt</td>
+        <td class="yes">Regelmäßig (1-2x/Woche) auf Bankkonto einzahlen</td>
+        <td>Sicherheitsrisiko + erhöhte Aufmerksamkeit bei Betriebsprüfung</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box success">
+    <div class="box-title">Die goldenen Regeln auf einen Blick</div>
+    <p>1. Jeden Tag Z-Bericht drucken und aufbewahren</p>
+    <p>2. Nur BAR-Bewegungen ins Kassenbuch eintragen</p>
+    <p>3. Kassenbestand darf NIEMALS negativ werden</p>
+    <p>4. Zu jeder Buchung gehört ein Beleg</p>
+    <p>5. Keinen Tag auslassen — auch Ruhetage eintragen</p>
+    <p>6. Regelmäßig Bargeld auf die Bank einzahlen</p>
+    <p>7. USt-Sätze 7 % und 19 % sorgfältig trennen</p>
+    <p>8. Bei Fehlern: Stornobuchung statt Löschung</p>
+    <p>9. Alle Unterlagen 10 Jahre aufbewahren</p>
+    <p>10. Im Zweifel den Steuerberater fragen</p>
+  </div>
+</div>
+
+<footer>
+  <p>Kassenbuch App — Anleitung · Version 2.0 · &copy; 2025</p>
+  <p>Dies ist keine Steuerberatung. Bitte stimmen Sie alle Angaben mit Ihrem Steuerberater ab.</p>
+</footer>
+
+</div>
+</body>
+</html>

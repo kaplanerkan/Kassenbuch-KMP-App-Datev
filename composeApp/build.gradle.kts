@@ -151,12 +151,12 @@ kotlin {
 
 android {
     namespace = "de.panda.kassenbuch"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "de.panda.kassenbuch"
         minSdk = 30
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "2.0.0"
 
