@@ -15,9 +15,23 @@ Eine plattformübergreifende App zum Führen eines digitalen Kassenbuchs nach de
 
 ## Screenshots
 
-| Desktop (Windows) | Android |
+### Dashboard
+
+| Desktop (Light) | Android Tablet (Dark) |
 |:--:|:--:|
-| ![Desktop Dashboard](screenshots/AnyDesk_LUu2tIrOCU.png) | ![Android Dashboard](screenshots/AnyDesk_Vgp4XwIt7v.png) |
+| ![Desktop Dashboard](screenshots/AnyDesk_LUu2tIrOCU.png) | ![Android Dashboard](screenshots/scrcpy_TZGHa0rj5Y.png) |
+
+### Buchungen & Neue Buchung
+
+| Android Buchungsliste (Monatsfilter) | Desktop Buchungsformular | Android Buchungsformular |
+|:--:|:--:|:--:|
+| ![Buchungen](screenshots/scrcpy_sneH5ms4Yq.png) | ![Desktop Formular](screenshots/java_8lFQVu6UUo.png) | ![Android Formular](screenshots/scrcpy_oqE0imNRwe.png) |
+
+### Export & Android (Compact)
+
+| Android Export | Android (Compact) |
+|:--:|:--:|
+| ![Export](screenshots/scrcpy_ZRr9jcGjm0.png) | ![Android Compact](screenshots/AnyDesk_Vgp4XwIt7v.png) |
 
 ---
 

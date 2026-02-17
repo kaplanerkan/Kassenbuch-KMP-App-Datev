@@ -13,9 +13,23 @@ Almanya'daki GoBD kurallarına uygun dijital kasa defteri uygulaması. Kotlin Mu
 
 ## Ekran Görüntüleri
 
-| Desktop (Windows) | Android |
+### Dashboard
+
+| Desktop (Aydınlık) | Android Tablet (Karanlık) |
 |:--:|:--:|
-| ![Desktop Dashboard](screenshots/AnyDesk_LUu2tIrOCU.png) | ![Android Dashboard](screenshots/AnyDesk_Vgp4XwIt7v.png) |
+| ![Desktop Dashboard](screenshots/AnyDesk_LUu2tIrOCU.png) | ![Android Dashboard](screenshots/scrcpy_TZGHa0rj5Y.png) |
+
+### Kayıtlar & Yeni Kayıt
+
+| Android Kayıt Listesi (Aylık Filtre) | Desktop Kayıt Formu | Android Kayıt Formu |
+|:--:|:--:|:--:|
+| ![Buchungen](screenshots/scrcpy_sneH5ms4Yq.png) | ![Desktop Form](screenshots/java_8lFQVu6UUo.png) | ![Android Form](screenshots/scrcpy_oqE0imNRwe.png) |
+
+### Dışa Aktarım & Android (Compact)
+
+| Android Export | Android (Compact) |
+|:--:|:--:|
+| ![Export](screenshots/scrcpy_ZRr9jcGjm0.png) | ![Android Compact](screenshots/AnyDesk_Vgp4XwIt7v.png) |
 
 ---
 
