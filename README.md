@@ -5,6 +5,8 @@
 
 [Türkçe sürüm / Turkish version](README_TR.md)
 
+📖 **[Vollständige Anleitung (Wiki)](https://github.com/kaplanerkan/Kassenbuch-KMP-App-Datev/wiki)** — Deutsch · Türkçe
+
 ---
 
 ## Was ist das?

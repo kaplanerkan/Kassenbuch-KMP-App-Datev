@@ -3,6 +3,8 @@
 > Dönerci, pizzacı ve küçük gastronomi işletmeleri için dijital kasa defteri.
 > Almanya GoBD kurallarına uygun · DATEV dışa aktarımı · Material 3 · Offline · Android, Desktop & iOS
 
+📖 **[Detaylı Kullanım Kılavuzu (Wiki)](https://github.com/kaplanerkan/Kassenbuch-KMP-App-Datev/wiki)** — Deutsch · Türkçe
+
 ---
 
 ## Bu nedir?
